@@ -2,13 +2,15 @@ package com.example.rajesh.expensetracker;
 
 import android.app.Application;
 
-/**
- * Created by rajesh on 3/23/16.
- */
+import timber.log.Timber;
+
+
 public class ExpenseTrackerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
     }
 }
