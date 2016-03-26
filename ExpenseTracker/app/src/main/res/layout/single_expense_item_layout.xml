@@ -17,6 +17,8 @@
         android:orientation="horizontal"
         android:paddingBottom="16dp"
         android:paddingLeft="8dp"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"
         android:paddingTop="16dp">
 
         <ImageView
