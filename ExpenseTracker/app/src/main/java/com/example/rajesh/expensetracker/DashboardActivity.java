@@ -5,20 +5,19 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.rajesh.expensetracker.dashboard.DashBoardFragment;
+import com.example.rajesh.expensetracker.base.activity.BaseActivity;
+import com.example.rajesh.expensetracker.expense.AddExpense;
 
-public class DashboardActivity extends AppCompatActivity
+public class DashboardActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -31,7 +30,12 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new DashBoardFragment(), "fragment").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new AddExpense(), "fragment").commit();
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_navigation;
     }
 
     @Override

@@ -11,6 +11,6 @@ public class Expense {
     public String expenseTitle;
     public String expenseDescription;
     public int expenseAmount;
-    public ExpenseCategories expenseCategories;
+    public ExpenseCategory expenseCategories;
     public ExpenseType expenseType;
 }

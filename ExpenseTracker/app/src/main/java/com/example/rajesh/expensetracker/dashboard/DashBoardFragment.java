@@ -6,45 +6,46 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.rajesh.expensetracker.R;
+import com.example.rajesh.expensetracker.base.frament.BaseFragment;
 
 import java.util.ArrayList;
+
+import butterknife.Bind;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DashBoardFragment extends Fragment implements ExpenseView {
-
-    private static final String TAG = DashBoardFragment.class.getSimpleName();
-    View view;
+public class DashBoardFragment extends BaseFragment implements ExpenseView {
     ExpenseAdapter expenseAdapter;
+    @Bind(R.id.rv_dashboard)
     RecyclerView rvDashBoard;
     DashboardPresenter dashboardPresenter;
+
 
     public DashBoardFragment() {
         // Required empty public constructor
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_dash_board, container, false);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setRecyclerViewAdapter();
 
         dashboardPresenter = new DashboardPresenter(this);
         dashboardPresenter.getData();
 
-        return view;
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.fragment_dash_board;
     }
 
     private void setRecyclerViewAdapter() {
         ArrayList<Expense> expenses = new ArrayList<>();
-        rvDashBoard = (RecyclerView) view.findViewById(R.id.rv_dashboard);
         rvDashBoard.setLayoutManager(new LinearLayoutManager(getActivity()));
         expenseAdapter = new ExpenseAdapter(expenses);
         rvDashBoard.setAdapter(expenseAdapter);

@@ -16,8 +16,8 @@ public class ExpenseModel implements ExpenseModelContract {
         expense.expenseTitle = "MoMo";
         expense.expenseAmount = 100;
 
-        ExpenseCategories expenseCategories = new ExpenseCategories();
-        expenseCategories.categorieTitle = "Food";
+        ExpenseCategory expenseCategories = new ExpenseCategory();
+        expenseCategories.categoryTitle = "Food";
 
         expense.expenseCategories = expenseCategories;
         expense.expenseDescription = "had momo at coffe time";
@@ -28,8 +28,8 @@ public class ExpenseModel implements ExpenseModelContract {
         expenseOne.expenseTitle = "Drinks";
         expenseOne.expenseAmount = 200;
 
-        ExpenseCategories expenseCategoriesOne = new ExpenseCategories();
-        expenseCategoriesOne.categorieTitle = "Food";
+        ExpenseCategory expenseCategoriesOne = new ExpenseCategory();
+        expenseCategoriesOne.categoryTitle = "Food";
 
         expenseOne.expenseCategories = expenseCategories;
         expenseOne.expenseDescription = "had food on magic store";
