@@ -22,7 +22,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 
-public class AddExpense extends BaseFragment {
+public class ExpenseFragment extends BaseFragment {
 
 
     @Bind(R.id.edt_expense_date)
@@ -41,7 +41,7 @@ public class AddExpense extends BaseFragment {
     TextView tvCategoryLabel;
 
 
-    public AddExpense() {
+    public ExpenseFragment() {
         // Required empty public constructor
     }
 

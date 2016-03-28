@@ -9,8 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.rajesh.expensetracker.account.AccountFragment;
 import com.example.rajesh.expensetracker.base.activity.BaseActivity;
-import com.example.rajesh.expensetracker.expense.AddExpense;
 
 public class DashboardActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,7 +30,7 @@ public class DashboardActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new AddExpense(), "fragment").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new AccountFragment(), "fragment").commit();
 
     }
 
