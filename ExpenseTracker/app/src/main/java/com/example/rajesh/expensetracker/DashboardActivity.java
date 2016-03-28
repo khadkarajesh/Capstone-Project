@@ -31,6 +31,7 @@ public class DashboardActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new AddExpense(), "fragment").commit();
+
     }
 
     @Override
