@@ -10,8 +10,8 @@ public class ExpenseTrackerDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "Expense.db";
     private static final int DATABASE_VERSION = 1;
 
-    public ExpenseTrackerDbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+    public ExpenseTrackerDbHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ExpenseTrackerDbHelper extends SQLiteOpenHelper {
                 + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TITLE + " TEXT NOT NULL,"
                 + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DESCRIPTION + " TEXT NOT NULL,"
                 + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_RECURRING_TYPE + " TEXT NOT NULL,"
-                + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID + " INTEGER NOT NULL"
+                + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID + " INTEGER NOT NULL,"
                 + " FOREIGN KEY(" + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID + ")"
                 + "REFERENCES " + ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME
                 + "(" + ExpenseTrackerContract.ExpenseCategoriesEntry._ID + ")"
