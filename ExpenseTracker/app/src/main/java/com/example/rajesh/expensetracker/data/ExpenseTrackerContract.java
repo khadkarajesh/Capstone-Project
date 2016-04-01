@@ -63,5 +63,9 @@ public class ExpenseTrackerContract {
 
         public static final String COLUMNS_CATEGORIES_NAME = "categories_name";
         public static final String COLUMNS_CATEGORIES_COLOR = "categories_color";
+
+        public static Uri buildAccountUri(long categoryId) {
+            return ContentUris.withAppendedId(CONTENT_URI, categoryId);
+        }
     }
 }

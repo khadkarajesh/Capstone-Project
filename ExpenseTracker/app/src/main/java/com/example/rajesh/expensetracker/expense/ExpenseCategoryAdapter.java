@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rajesh.expensetracker.R;
-import com.example.rajesh.expensetracker.dashboard.ExpenseCategory;
+import com.example.rajesh.expensetracker.category.ExpenseCategory;
 
 import java.util.ArrayList;
 

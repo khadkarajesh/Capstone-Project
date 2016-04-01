@@ -19,13 +19,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".TestActivity" />
 
         <provider
             android:name=".data.ExpenseTrackerProvider"
             android:authorities="com.example.rajesh.expensetracker"
             android:exported="false"
             android:syncable="true" />
+
+        <activity android:name=".HitActivity"></activity>
     </application>
 
 </manifest>

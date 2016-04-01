@@ -1,6 +1,8 @@
 package com.example.rajesh.expensetracker.dashboard;
 
 
+import com.example.rajesh.expensetracker.category.ExpenseCategory;
+
 public class Expense {
 
     public enum ExpenseType {

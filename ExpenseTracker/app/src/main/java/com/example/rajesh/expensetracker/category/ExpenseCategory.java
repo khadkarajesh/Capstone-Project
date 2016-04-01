@@ -1,4 +1,4 @@
-package com.example.rajesh.expensetracker.dashboard;
+package com.example.rajesh.expensetracker.category;
 
 public class ExpenseCategory {
     public String categoryTitle;

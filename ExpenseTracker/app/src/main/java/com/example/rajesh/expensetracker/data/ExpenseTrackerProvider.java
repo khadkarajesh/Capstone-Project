@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 public class ExpenseTrackerProvider extends ContentProvider {
 
     ExpenseTrackerDbHelper dbHelper;
+    SQLiteDatabase sqLiteDatabase;
     UriMatcher uriMatcher = buildUriMatcher();
 
     private static final int ACCOUNT = 100;
@@ -36,7 +38,17 @@ public class ExpenseTrackerProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        Cursor retCursor = null;
+        sqLiteDatabase = dbHelper.getReadableDatabase();
+        switch (uriMatcher.match(uri)) {
+            case CATEGORY:
+                retCursor = sqLiteDatabase.query(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return retCursor;
     }
 
     @Nullable
@@ -66,17 +78,23 @@ public class ExpenseTrackerProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri resultUri = null;
+        long _id;
         switch (uriMatcher.match(uri)) {
             case ACCOUNT:
-                long _id = dbHelper.getWritableDatabase().insert(ExpenseTrackerContract.AccountEntry.TABLE_NAME, null, values);
+                _id = dbHelper.getWritableDatabase().insert(ExpenseTrackerContract.AccountEntry.TABLE_NAME, null, values);
                 if (_id > 0) {
                     resultUri = ExpenseTrackerContract.AccountEntry.buildAccountUri(_id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
-            case SINGLE_CATEGORY:
-                dbHelper.getWritableDatabase().insert(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, null, values);
+            case CATEGORY:
+                _id = dbHelper.getWritableDatabase().insert(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, null, values);
+                if (_id > 0) {
+                    resultUri = ExpenseTrackerContract.ExpenseCategoriesEntry.buildAccountUri(_id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
                 break;
             case SINGLE_EXPENSE:
                 dbHelper.getWritableDatabase().insert(ExpenseTrackerContract.ExpenseEntry.TABLE_NAME, null, values);
@@ -105,6 +123,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/*", ACCOUNT_LIST);
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/#", SINGLE_ACCOUNT);
 
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH, CATEGORY);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/*", CATEGORY_LIST);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/#", SINGLE_CATEGORY);
 

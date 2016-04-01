@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.rajesh.expensetracker.R;
 import com.example.rajesh.expensetracker.base.frament.BaseFragment;
-import com.example.rajesh.expensetracker.dashboard.ExpenseCategory;
+import com.example.rajesh.expensetracker.category.ExpenseCategory;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
