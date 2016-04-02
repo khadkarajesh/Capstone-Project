@@ -2,13 +2,14 @@ package com.example.rajesh.expensetracker.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
 
 public class CircularView extends View {
-    int color = 0;
+    String color = null;
     Paint paint;
 
     public CircularView(Context context) {
@@ -32,7 +33,7 @@ public class CircularView extends View {
         paint.setStyle(Paint.Style.FILL);
     }
 
-    public void setFillColor(int color) {
+    public void setFillColor(String color) {
         this.color = color;
         invalidate();
     }
@@ -81,7 +82,7 @@ public class CircularView extends View {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        paint.setColor(color);
+        paint.setColor(Color.parseColor(color));
         canvas.drawCircle(getMeasuredWidth() / 2, getMeasuredHeight() / 2, getMeasuredHeight() / 2, paint);
     }
 }

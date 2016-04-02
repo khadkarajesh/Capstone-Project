@@ -1,8 +1,7 @@
 package com.example.rajesh.expensetracker;
 
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.example.rajesh.expensetracker.widget.CircularView;
 
@@ -16,6 +15,6 @@ public class HitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hit);
 
         circularImageView = (CircularView) findViewById(R.id.iv_circular_image);
-        circularImageView.setFillColor(Color.parseColor("#ff00ff"));
+        circularImageView.setFillColor("#ff00ff");
     }
 }

@@ -1,6 +1,5 @@
 package com.example.rajesh.expensetracker.category;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +28,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Expens
     @Override
     public void onBindViewHolder(ExpenseHolder holder, int position) {
         holder.expenseTitle.setText(expense.get(position).categoryTitle);
-        //holder.circularView.setBackgroundColor(Color.parseColor(expense.get(position).categoryColor));
-        holder.circularView.setBackgroundColor(Color.parseColor(expense.get(position).categoryColor));
-
+        holder.circularView.setFillColor(expense.get(position).categoryColor);
     }
 
     @Override
@@ -51,7 +48,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Expens
         public ExpenseHolder(View itemView) {
             super(itemView);
             expenseTitle = (TextView) itemView.findViewById(R.id.tv_categories_title);
-            circularView = (CircularView) itemView.findViewById(R.id.iv_circular_image);
+            circularView = (CircularView) itemView.findViewById(R.id.iv_categories_indicator);
         }
     }
 }

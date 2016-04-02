@@ -21,6 +21,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import me.priyesh.chroma.ChromaDialog;
 import me.priyesh.chroma.ColorSelectListener;
+import timber.log.Timber;
 
 
 public class AddCategoryFragment extends BaseFragment {
@@ -32,7 +33,9 @@ public class AddCategoryFragment extends BaseFragment {
     ImageView ivColorPicker;
 
 
-    String color = "#ff0000";
+    String color;
+
+    String hexColor;
 
 
     public AddCategoryFragment() {
@@ -42,7 +45,8 @@ public class AddCategoryFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ivColorPicker.setBackgroundColor(Color.parseColor(color));
+        //ivColorPicker.setBackgroundColor(Color.parseColor());
+        //ivColorPicker.setColorFilter(color);
     }
 
     @OnClick({R.id.iv_color_picker, R.id.btn_add_category})
@@ -53,8 +57,10 @@ public class AddCategoryFragment extends BaseFragment {
                     .onColorSelected(new ColorSelectListener() {
                         @Override
                         public void onColorSelected(@ColorInt int i) {
-                            color = Integer.toHexString(i);
+                            //color =i;
                             //Timber.d("color code %d", color);
+                            hexColor = String.format("#%06X", (0xFFFFFF & i));
+                            Timber.d("color code %s",hexColor);
                         }
                     })
                     .create()
@@ -63,7 +69,7 @@ public class AddCategoryFragment extends BaseFragment {
         if (view.getId() == R.id.btn_add_category) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(ExpenseTrackerContract.ExpenseCategoriesEntry.COLUMNS_CATEGORIES_NAME, edtCategoryName.getText().toString());
-            contentValues.put(ExpenseTrackerContract.ExpenseCategoriesEntry.COLUMNS_CATEGORIES_COLOR, color);
+            contentValues.put(ExpenseTrackerContract.ExpenseCategoriesEntry.COLUMNS_CATEGORIES_COLOR, hexColor);
             Uri uri = getActivity().getContentResolver().insert(ExpenseTrackerContract.ExpenseCategoriesEntry.CONTENT_URI, contentValues);
             if (ContentUris.parseId(uri) > 0) {
                 Toast.makeText(getActivity(), "category inserted", Toast.LENGTH_SHORT).show();
