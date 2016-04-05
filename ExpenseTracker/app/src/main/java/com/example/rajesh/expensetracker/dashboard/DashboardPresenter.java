@@ -1,15 +1,17 @@
 package com.example.rajesh.expensetracker.dashboard;
 
+import com.example.rajesh.expensetracker.category.ExpenseCategory;
+
 import java.util.ArrayList;
 
 
 public class DashboardPresenter implements DashboardPresenterContract, OnExpenseResultListener {
 
     private static final String TAG = DashboardPresenter.class.getSimpleName();
-    ExpenseView expenseView;
+    ExpenseView.Display expenseView;
     ExpenseModel expenseModel;
 
-    public DashboardPresenter(ExpenseView expenseView) {
+    public DashboardPresenter(ExpenseView.Display expenseView) {
         this.expenseView = expenseView;
         this.expenseModel = new ExpenseModel();
     }
@@ -21,8 +23,8 @@ public class DashboardPresenter implements DashboardPresenterContract, OnExpense
 
 
     @Override
-    public void onExpenseSuccess(ArrayList<Expense> expenses) {
-        expenseView.showExpenses(expenses);
+    public void onExpenseSuccess(ArrayList<Expense> expenses, ArrayList<ExpenseCategory> expenseCategories) {
+        expenseView.showExpenses(expenses,expenseCategories);
     }
 
     @Override

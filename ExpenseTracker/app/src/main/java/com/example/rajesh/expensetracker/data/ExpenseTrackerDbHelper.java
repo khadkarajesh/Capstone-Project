@@ -37,8 +37,9 @@ public class ExpenseTrackerDbHelper extends SQLiteOpenHelper {
                 + ExpenseTrackerContract.ExpenseEntry._ID + " INTEGER PRIMARY KEY,"
                 + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE + " INTEGER NOT NULL,"
                 + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TITLE + " TEXT NOT NULL,"
+                + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_AMOUNT + " INTEGER NOT NULL,"
                 + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DESCRIPTION + " TEXT NOT NULL,"
-                + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_RECURRING_TYPE + " TEXT NOT NULL,"
+                + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TYPE + " TEXT NOT NULL,"
                 + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID + " INTEGER NOT NULL,"
                 + " FOREIGN KEY(" + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID + ")"
                 + "REFERENCES " + ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME

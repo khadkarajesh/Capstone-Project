@@ -1,45 +1,52 @@
 package com.example.rajesh.expensetracker.dashboard;
 
+import android.database.Cursor;
+import android.net.Uri;
+
+import com.example.rajesh.expensetracker.ExpenseTrackerApplication;
 import com.example.rajesh.expensetracker.category.ExpenseCategory;
+import com.example.rajesh.expensetracker.data.ExpenseTrackerContract;
+import com.example.rajesh.expensetracker.utils.DateTimeUtil;
 
 import java.util.ArrayList;
-
-import timber.log.Timber;
 
 
 public class ExpenseModel implements ExpenseModelContract {
     @Override
     public void getExpense(OnExpenseResultListener onExpenseResultListener) {
         ArrayList<Expense> expenses = new ArrayList<>();
+        ArrayList<ExpenseCategory> expenseCategories = new ArrayList<>();
 
-        Timber.d("called at Expense Model");
+        long endOfMonthTimeStamp = DateTimeUtil.getTimeStamp(DateTimeUtil.MONTH_LAST_DATE);
+        long startOfMonthTimeStamp = DateTimeUtil.getTimeStamp(DateTimeUtil.MONTH_FIRST_DATE);
 
-        Expense expense = new Expense();
-        expense.expenseTitle = "MoMo";
-        expense.expenseAmount = 100;
+        Uri uri = ExpenseTrackerContract.ExpenseEntry.buildExpenseCategoryUri(String.valueOf(startOfMonthTimeStamp), String.valueOf(endOfMonthTimeStamp));
+        Cursor cursor =
+                ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().query(uri
+                        , null
+                        , null
+                        , null
+                        , null);
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
 
-        ExpenseCategory expenseCategories = new ExpenseCategory();
-        expenseCategories.categoryTitle = "Food";
+                Expense expense = new Expense();
+                ExpenseCategory expenseCategory = new ExpenseCategory();
 
-        expense.expenseCategories = expenseCategories;
-        expense.expenseDescription = "had momo at coffe time";
-        expense.expenseType = Expense.ExpenseType.NON_RECURRING;
+                expense.expenseTitle = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TITLE));
+                expense.expenseAmount = cursor.getInt(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_AMOUNT));
+                expense.categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID));
+                expense.expenseDescription = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DESCRIPTION));
+                expense.expenseType = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TYPE));
+                expense.expenseDate = cursor.getLong(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE));
 
+                expenseCategory.categoryTitle = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseCategoriesEntry.COLUMNS_CATEGORIES_NAME));
+                expenseCategory.categoryColor = cursor.getString(cursor.getColumnIndex(ExpenseTrackerContract.ExpenseCategoriesEntry.COLUMNS_CATEGORIES_COLOR));
 
-        Expense expenseOne = new Expense();
-        expenseOne.expenseTitle = "Drinks";
-        expenseOne.expenseAmount = 200;
-
-        ExpenseCategory expenseCategoriesOne = new ExpenseCategory();
-        expenseCategoriesOne.categoryTitle = "Food";
-
-        expenseOne.expenseCategories = expenseCategories;
-        expenseOne.expenseDescription = "had food on magic store";
-        expenseOne.expenseType = Expense.ExpenseType.NON_RECURRING;
-
-        expenses.add(expense);
-        expenses.add(expenseOne);
-
-        onExpenseResultListener.onExpenseSuccess(expenses);
+                expenses.add(expense);
+                expenseCategories.add(expenseCategory);
+            }
+        }
+        onExpenseResultListener.onExpenseSuccess(expenses,expenseCategories);
     }
 }

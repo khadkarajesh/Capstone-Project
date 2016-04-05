@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rajesh.expensetracker.R;
 import com.example.rajesh.expensetracker.category.ExpenseCategory;
+import com.example.rajesh.expensetracker.widget.CircularView;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,6 @@ import butterknife.ButterKnife;
 public class ExpenseCategoryAdapter extends BaseAdapter {
     ArrayList<ExpenseCategory> categories = new ArrayList<>();
     Context mContext;
-    View view;
 
     public ExpenseCategoryAdapter(Context context, ArrayList<ExpenseCategory> data) {
         this.categories = data;
@@ -28,7 +27,7 @@ public class ExpenseCategoryAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 20;
+        return categories.size();
     }
 
     @Override
@@ -43,7 +42,6 @@ public class ExpenseCategoryAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         ExpenseCategoryHolder holder;
         View view = convertView;
         if (convertView == null) {
@@ -53,14 +51,19 @@ public class ExpenseCategoryAdapter extends BaseAdapter {
         } else {
             holder = (ExpenseCategoryHolder) view.getTag();
         }
-        //holder.tvCategoriesName.setText(categories.get(position).categoryTitle);
-        holder.tvCategoriesName.setText("hello categories");
+        holder.tvCategoriesName.setText(categories.get(position).categoryTitle);
+        holder.ivCategoriesIndicator.setFillColor(categories.get(position).categoryColor);
         return view;
+    }
+
+    public void addCategory(ArrayList<ExpenseCategory> data) {
+        categories.addAll(data);
+        notifyDataSetChanged();
     }
 
     public static class ExpenseCategoryHolder {
         @Bind(R.id.iv_categories_indicator)
-        ImageView ivCategoriesIndicator;
+        CircularView ivCategoriesIndicator;
 
         @Bind(R.id.tv_categories_name)
         TextView tvCategoriesName;

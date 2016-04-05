@@ -19,6 +19,7 @@ public class CategoryModel implements CategoryModelContract {
 
         while (cursor.moveToNext()) {
             ExpenseCategory expenseCategory = new ExpenseCategory();
+            expenseCategory.id=cursor.getInt(cursor.getColumnIndex(ExpenseTrackerContract.ExpenseCategoriesEntry._ID));
             expenseCategory.categoryTitle = cursor.getString(cursor.getColumnIndex(ExpenseTrackerContract.ExpenseCategoriesEntry.COLUMNS_CATEGORIES_NAME));
             expenseCategory.categoryColor = cursor.getString(cursor.getColumnIndex(ExpenseTrackerContract.ExpenseCategoriesEntry.COLUMNS_CATEGORIES_COLOR));
             expenseCategories.add(expenseCategory);

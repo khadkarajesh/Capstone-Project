@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -23,11 +24,39 @@ public class ExpenseTrackerProvider extends ContentProvider {
     private static final int EXPENSE = 200;
     private static final int SINGLE_EXPENSE = 201;
     private static final int EXPENSE_LIST = 202;
+    private static final int EXPENSE_WITH_CATEGORY = 203;
 
 
     private static final int CATEGORY = 300;
     private static final int SINGLE_CATEGORY = 301;
     private static final int CATEGORY_LIST = 302;
+
+
+
+    public String startDate,endDate;
+    public static SQLiteQueryBuilder sqLiteQueryBuilder;
+    public  String CATEGORY_AND_EXPENSE_BY_MONTH=ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
+            +"."
+            + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE
+            +" >= ? "
+            +" AND "
+            +ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
+            +"."
+            +ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE
+            +" <= ?";
+
+    static {
+        sqLiteQueryBuilder = new SQLiteQueryBuilder();
+        String JOIN_EXPENSE_AND_CATEGORY_TABLE = ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME
+                + " INNER JOIN "
+                +ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
+                + " ON "
+                + ExpenseTrackerContract.ExpenseEntry.TABLE_NAME + "." + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID
+                + " = "
+                + ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME + "." + ExpenseTrackerContract.ExpenseCategoriesEntry._ID;
+
+        sqLiteQueryBuilder.setTables(JOIN_EXPENSE_AND_CATEGORY_TABLE);
+    }
 
     @Override
     public boolean onCreate() {
@@ -43,6 +72,14 @@ public class ExpenseTrackerProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case CATEGORY:
                 retCursor = sqLiteDatabase.query(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case EXPENSE:
+                retCursor = sqLiteDatabase.query(ExpenseTrackerContract.ExpenseEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case EXPENSE_WITH_CATEGORY:
+                startDate=ExpenseTrackerContract.ExpenseEntry.getStartDateOfMonth(uri);
+                endDate=ExpenseTrackerContract.ExpenseEntry.getLastDateOfMonth(uri);
+                retCursor=sqLiteQueryBuilder.query(dbHelper.getWritableDatabase(),null,CATEGORY_AND_EXPENSE_BY_MONTH,new String[]{startDate,endDate},null,null,ExpenseTrackerContract.ExpenseEntry.TABLE_NAME+"."+ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE+" DESC");
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -61,14 +98,16 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 return ExpenseTrackerContract.AccountEntry.CONTENT_ITEM_TYPE;
             case ACCOUNT_LIST:
                 return ExpenseTrackerContract.AccountEntry.CONTENT_TYPE;
-            case SINGLE_EXPENSE:
+            case EXPENSE:
                 return ExpenseTrackerContract.ExpenseEntry.CONTENT_ITEM_TYPE;
             case EXPENSE_LIST:
                 return ExpenseTrackerContract.ExpenseEntry.CONTENT_TYPE;
-            case SINGLE_CATEGORY:
+            case CATEGORY:
                 return ExpenseTrackerContract.ExpenseCategoriesEntry.CONTENT_ITEM_TYPE;
             case CATEGORY_LIST:
                 return ExpenseTrackerContract.ExpenseCategoriesEntry.CONTENT_TYPE;
+            case EXPENSE_WITH_CATEGORY:
+                return ExpenseTrackerContract.ExpenseEntry.CONTENT_TYPE;
         }
 
         return null;
@@ -96,8 +135,13 @@ public class ExpenseTrackerProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
-            case SINGLE_EXPENSE:
-                dbHelper.getWritableDatabase().insert(ExpenseTrackerContract.ExpenseEntry.TABLE_NAME, null, values);
+            case EXPENSE:
+                _id = dbHelper.getWritableDatabase().insert(ExpenseTrackerContract.ExpenseEntry.TABLE_NAME, null, values);
+                if (_id > 0) {
+                    resultUri = ExpenseTrackerContract.ExpenseEntry.buildExpenseUri(_id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
                 break;
         }
         getContext().getContentResolver().notifyChange(uri, null);
@@ -126,6 +170,12 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH, CATEGORY);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/*", CATEGORY_LIST);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/#", SINGLE_CATEGORY);
+
+
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH, EXPENSE);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*", EXPENSE_LIST);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/#", SINGLE_EXPENSE);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*", EXPENSE_WITH_CATEGORY);
 
         return uriMatcher;
     }

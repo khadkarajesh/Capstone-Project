@@ -48,8 +48,26 @@ public class ExpenseTrackerContract {
         public static final String COLUMNS_EXPENSE_DATE = "expense_date";
         public static final String COLUMNS_EXPENSE_TITLE = "expense_title";
         public static final String COLUMNS_EXPENSE_DESCRIPTION = "expense_description";
-        public static final String COLUMNS_EXPENSE_RECURRING_TYPE = "expense_recurring_type";
+        public static final String COLUMNS_EXPENSE_AMOUNT = "expense_amount";
+        public static final String COLUMNS_EXPENSE_TYPE = "expense_type";
         public static final String COLUMNS_EXPENSE_CATEGORIES_ID = "expense_categories_id";
+
+        public static Uri buildExpenseUri(long expenseId) {
+            return ContentUris.withAppendedId(CONTENT_URI, expenseId);
+        }
+
+        public static Uri buildExpenseCategoryUri(String startDate,String endDate)
+        {
+            return CONTENT_URI.buildUpon().appendPath(startDate).appendPath(endDate).build();
+        }
+
+        public static String getLastDateOfMonth(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
+
+        public static String getStartDateOfMonth(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
 
     }
 

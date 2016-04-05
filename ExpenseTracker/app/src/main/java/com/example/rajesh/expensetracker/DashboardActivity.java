@@ -2,6 +2,7 @@ package com.example.rajesh.expensetracker;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -9,8 +10,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.rajesh.expensetracker.account.AccountFragment;
 import com.example.rajesh.expensetracker.base.activity.BaseActivity;
 import com.example.rajesh.expensetracker.category.CategoryFragment;
+import com.example.rajesh.expensetracker.dashboard.DashBoardFragment;
+import com.example.rajesh.expensetracker.expense.ExpenseFragment;
+import com.example.rajesh.expensetracker.history.HistoryFragment;
 
 public class DashboardActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,9 +35,7 @@ public class DashboardActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new CategoryFragment(), "fragment").commit();
-
-        //startActivity(new Intent(this, HitActivity.class));
+        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new DashBoardFragment(), "fragment").commit();
     }
 
 
@@ -70,18 +73,20 @@ public class DashboardActivity extends BaseActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
+        Fragment fragment = null;
 
         if (id == R.id.nav_account) {
+            fragment=new AccountFragment();
         } else if (id == R.id.nav_categories) {
-
+            fragment=new CategoryFragment();
         } else if (id == R.id.nav_history_report) {
-
+            fragment=new HistoryFragment();
         } else if (id == R.id.nav_recurring_expense) {
-
+            fragment=new ExpenseFragment();
         } else if (id == R.id.nav_settings) {
 
         }
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container,fragment, "fragment").commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

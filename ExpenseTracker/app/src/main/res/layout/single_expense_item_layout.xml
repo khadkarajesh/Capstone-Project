@@ -21,12 +21,11 @@
         android:background="?android:selectableItemBackground"
         android:paddingTop="16dp">
 
-        <ImageView
+        <com.example.rajesh.expensetracker.widget.CircularView
             android:id="@+id/iv_categories_indicator"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginRight="20dp"
-            android:background="@drawable/circular_shape"
             android:padding="8dp" />
 
         <TextView
