@@ -17,6 +17,7 @@
         android:background="?android:selectableItemBackground"
         android:clickable="true"
         android:orientation="horizontal"
+        android:id="@+id/ll_container"
         android:paddingBottom="16dp"
         android:paddingLeft="8dp"
         android:paddingTop="16dp">

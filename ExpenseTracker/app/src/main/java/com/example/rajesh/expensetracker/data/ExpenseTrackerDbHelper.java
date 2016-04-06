@@ -43,7 +43,7 @@ public class ExpenseTrackerDbHelper extends SQLiteOpenHelper {
                 + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID + " INTEGER NOT NULL,"
                 + " FOREIGN KEY(" + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID + ")"
                 + "REFERENCES " + ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME
-                + "(" + ExpenseTrackerContract.ExpenseCategoriesEntry._ID + ") ON DELETE CASCADE "
+                + "(" + ExpenseTrackerContract.ExpenseCategoriesEntry._ID + ") ON DELETE CASCADE ON UPDATE CASCADE"
                 + ");";
 
         db.execSQL(CREATE_ACCOUNT_TABLE);

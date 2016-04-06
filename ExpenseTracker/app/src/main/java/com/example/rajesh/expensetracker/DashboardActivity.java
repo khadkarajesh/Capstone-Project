@@ -14,11 +14,15 @@ import com.example.rajesh.expensetracker.account.AccountFragment;
 import com.example.rajesh.expensetracker.base.activity.BaseActivity;
 import com.example.rajesh.expensetracker.category.AddCategoryFragment;
 import com.example.rajesh.expensetracker.category.CategoryFragment;
+import com.example.rajesh.expensetracker.category.CategoryLongPressListener;
+import com.example.rajesh.expensetracker.category.ExpenseCategory;
 import com.example.rajesh.expensetracker.expense.ExpenseFragment;
-import com.example.rajesh.expensetracker.history.HistoryFragment;
+import com.example.rajesh.expensetracker.report.ReportFragment;
+
+import timber.log.Timber;
 
 public class DashboardActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, CategoryLongPressListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,9 @@ public class DashboardActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new AddCategoryFragment(), "fragment").commit();
+        addFragment(AddCategoryFragment.getInstance(null), "add_category_fragment");
+
+        //getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new AddCategoryFragment(), "fragment").commit();
     }
 
 
@@ -76,19 +82,30 @@ public class DashboardActivity extends BaseActivity
         Fragment fragment = null;
 
         if (id == R.id.nav_account) {
-            fragment=new AccountFragment();
+            fragment = new AccountFragment();
         } else if (id == R.id.nav_categories) {
-            fragment=new CategoryFragment();
+            fragment = new CategoryFragment();
         } else if (id == R.id.nav_history_report) {
-            fragment=new HistoryFragment();
+            fragment = new ReportFragment();
         } else if (id == R.id.nav_recurring_expense) {
-            fragment=new ExpenseFragment();
+            fragment = new ExpenseFragment();
         } else if (id == R.id.nav_settings) {
 
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container,fragment, "fragment").commit();
+        addFragment(fragment, "fragment");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onCategoryLongPress(ExpenseCategory expenseCategory) {
+        Timber.d("expenseTracker %s",expenseCategory.categoryTitle);
+        AddCategoryFragment addCategoryFragment = AddCategoryFragment.getInstance(expenseCategory);
+        addFragment(addCategoryFragment, "category_fragment");
+    }
+
+    private void addFragment(Fragment fragment, String tag) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, fragment, tag).commit();
     }
 }

@@ -9,6 +9,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.rajesh.expensetracker.DashboardActivity;
 import com.example.rajesh.expensetracker.R;
 import com.example.rajesh.expensetracker.base.frament.BaseFragment;
 
@@ -59,7 +60,8 @@ public class CategoryFragment extends BaseFragment implements CategoryView {
     private void setRecyclerViewAdapter() {
         ArrayList<ExpenseCategory> expenses = new ArrayList<>();
         rvCategory.setLayoutManager(new LinearLayoutManager(getActivity()));
-        categoryAdapter = new CategoryAdapter(expenses);
+        categoryAdapter = new CategoryAdapter(getActivity(),expenses);
+        categoryAdapter.setOnCategoryLongPressListener((DashboardActivity)getActivity());
         rvCategory.setAdapter(categoryAdapter);
 
         ItemTouchHelper.SimpleCallback itemTouchCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -78,4 +80,5 @@ public class CategoryFragment extends BaseFragment implements CategoryView {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallBack);
         itemTouchHelper.attachToRecyclerView(rvCategory);
     }
+
 }

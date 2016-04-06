@@ -29,11 +29,10 @@ public class ExpenseTrackerProvider extends ContentProvider {
     private static final int EXPENSE_WITH_CATEGORY = 203;
 
 
-
     private static final int CATEGORY = 300;
     private static final int SINGLE_CATEGORY = 301;
     private static final int CATEGORY_LIST = 302;
-    private static final int DELETE_CATEGORY_BY_ID=303;
+    private static final int CATEGORY_BY_ID = 303;
 
 
     public String startDate, endDate;
@@ -111,7 +110,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 return ExpenseTrackerContract.ExpenseCategoriesEntry.CONTENT_TYPE;
             case EXPENSE_WITH_CATEGORY:
                 return ExpenseTrackerContract.ExpenseEntry.CONTENT_TYPE;
-            case DELETE_CATEGORY_BY_ID:
+            case CATEGORY_BY_ID:
                 return ExpenseTrackerContract.ExpenseCategoriesEntry.CONTENT_ITEM_TYPE;
         }
 
@@ -157,9 +156,9 @@ public class ExpenseTrackerProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int rowDeleted = 0;
         switch (uriMatcher.match(uri)) {
-            case DELETE_CATEGORY_BY_ID:
-                int categoryId=ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
-                rowDeleted = dbHelper.getWritableDatabase().delete(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, ExpenseTrackerContract.ExpenseCategoriesEntry._ID + " = ?", new String[]{"" +categoryId});
+            case CATEGORY_BY_ID:
+                int categoryId = ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
+                rowDeleted = dbHelper.getWritableDatabase().delete(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, ExpenseTrackerContract.ExpenseCategoriesEntry._ID + " = ?", new String[]{"" + categoryId});
                 break;
             default:
                 Timber.d("failed to delete data");
@@ -172,7 +171,17 @@ public class ExpenseTrackerProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        int updateId = 0;
+        switch (uriMatcher.match(uri)) {
+            case CATEGORY_BY_ID:
+                int categoryId = ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
+                updateId = dbHelper.getWritableDatabase().update(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, values, ExpenseTrackerContract.ExpenseCategoriesEntry._ID + " = ?", new String[]{"" + categoryId});
+                break;
+        }
+        if (updateId != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return updateId;
     }
 
     static UriMatcher buildUriMatcher() {
@@ -187,7 +196,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH, CATEGORY);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/*", CATEGORY_LIST);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/#", SINGLE_CATEGORY);
-        uriMatcher.addURI(authority,ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH+"/*",DELETE_CATEGORY_BY_ID);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/*", CATEGORY_BY_ID);
 
 
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH, EXPENSE);
