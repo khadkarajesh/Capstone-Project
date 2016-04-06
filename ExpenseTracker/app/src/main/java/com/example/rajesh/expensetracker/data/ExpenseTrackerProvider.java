@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
+import timber.log.Timber;
+
 
 public class ExpenseTrackerProvider extends ContentProvider {
 
@@ -27,29 +29,30 @@ public class ExpenseTrackerProvider extends ContentProvider {
     private static final int EXPENSE_WITH_CATEGORY = 203;
 
 
+
     private static final int CATEGORY = 300;
     private static final int SINGLE_CATEGORY = 301;
     private static final int CATEGORY_LIST = 302;
+    private static final int DELETE_CATEGORY_BY_ID=303;
 
 
-
-    public String startDate,endDate;
+    public String startDate, endDate;
     public static SQLiteQueryBuilder sqLiteQueryBuilder;
-    public  String CATEGORY_AND_EXPENSE_BY_MONTH=ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
-            +"."
+    public String CATEGORY_AND_EXPENSE_BY_MONTH = ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
+            + "."
             + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE
-            +" >= ? "
-            +" AND "
-            +ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
-            +"."
-            +ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE
-            +" <= ?";
+            + " >= ? "
+            + " AND "
+            + ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
+            + "."
+            + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE
+            + " <= ?";
 
     static {
         sqLiteQueryBuilder = new SQLiteQueryBuilder();
         String JOIN_EXPENSE_AND_CATEGORY_TABLE = ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME
                 + " INNER JOIN "
-                +ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
+                + ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
                 + " ON "
                 + ExpenseTrackerContract.ExpenseEntry.TABLE_NAME + "." + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID
                 + " = "
@@ -77,9 +80,9 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 retCursor = sqLiteDatabase.query(ExpenseTrackerContract.ExpenseEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case EXPENSE_WITH_CATEGORY:
-                startDate=ExpenseTrackerContract.ExpenseEntry.getStartDateOfMonth(uri);
-                endDate=ExpenseTrackerContract.ExpenseEntry.getLastDateOfMonth(uri);
-                retCursor=sqLiteQueryBuilder.query(dbHelper.getWritableDatabase(),null,CATEGORY_AND_EXPENSE_BY_MONTH,new String[]{startDate,endDate},null,null,ExpenseTrackerContract.ExpenseEntry.TABLE_NAME+"."+ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE+" DESC");
+                startDate = ExpenseTrackerContract.ExpenseEntry.getStartDateOfMonth(uri);
+                endDate = ExpenseTrackerContract.ExpenseEntry.getLastDateOfMonth(uri);
+                retCursor = sqLiteQueryBuilder.query(dbHelper.getWritableDatabase(), null, CATEGORY_AND_EXPENSE_BY_MONTH, new String[]{startDate, endDate}, null, null, ExpenseTrackerContract.ExpenseEntry.TABLE_NAME + "." + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE + " DESC");
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -108,6 +111,8 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 return ExpenseTrackerContract.ExpenseCategoriesEntry.CONTENT_TYPE;
             case EXPENSE_WITH_CATEGORY:
                 return ExpenseTrackerContract.ExpenseEntry.CONTENT_TYPE;
+            case DELETE_CATEGORY_BY_ID:
+                return ExpenseTrackerContract.ExpenseCategoriesEntry.CONTENT_ITEM_TYPE;
         }
 
         return null;
@@ -150,7 +155,19 @@ public class ExpenseTrackerProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        int rowDeleted = 0;
+        switch (uriMatcher.match(uri)) {
+            case DELETE_CATEGORY_BY_ID:
+                int categoryId=ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
+                rowDeleted = dbHelper.getWritableDatabase().delete(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, ExpenseTrackerContract.ExpenseCategoriesEntry._ID + " = ?", new String[]{"" +categoryId});
+                break;
+            default:
+                Timber.d("failed to delete data");
+        }
+        if (rowDeleted > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowDeleted;
     }
 
     @Override
@@ -170,6 +187,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH, CATEGORY);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/*", CATEGORY_LIST);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/#", SINGLE_CATEGORY);
+        uriMatcher.addURI(authority,ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH+"/*",DELETE_CATEGORY_BY_ID);
 
 
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH, EXPENSE);

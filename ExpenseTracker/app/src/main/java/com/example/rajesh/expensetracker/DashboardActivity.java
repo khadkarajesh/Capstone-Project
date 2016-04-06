@@ -12,8 +12,8 @@ import android.view.MenuItem;
 
 import com.example.rajesh.expensetracker.account.AccountFragment;
 import com.example.rajesh.expensetracker.base.activity.BaseActivity;
+import com.example.rajesh.expensetracker.category.AddCategoryFragment;
 import com.example.rajesh.expensetracker.category.CategoryFragment;
-import com.example.rajesh.expensetracker.dashboard.DashBoardFragment;
 import com.example.rajesh.expensetracker.expense.ExpenseFragment;
 import com.example.rajesh.expensetracker.history.HistoryFragment;
 
@@ -35,7 +35,7 @@ public class DashboardActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new DashBoardFragment(), "fragment").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new AddCategoryFragment(), "fragment").commit();
     }
 
 

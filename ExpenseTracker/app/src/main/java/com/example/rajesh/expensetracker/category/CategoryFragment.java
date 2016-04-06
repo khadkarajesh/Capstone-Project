@@ -3,9 +3,9 @@ package com.example.rajesh.expensetracker.category;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,10 +15,8 @@ import com.example.rajesh.expensetracker.base.frament.BaseFragment;
 import java.util.ArrayList;
 
 import butterknife.Bind;
+import timber.log.Timber;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class CategoryFragment extends BaseFragment implements CategoryView {
 
 
@@ -63,5 +61,21 @@ public class CategoryFragment extends BaseFragment implements CategoryView {
         rvCategory.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoryAdapter = new CategoryAdapter(expenses);
         rvCategory.setAdapter(categoryAdapter);
+
+        ItemTouchHelper.SimpleCallback itemTouchCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                categoryAdapter.deleteItem(viewHolder.getAdapterPosition());
+                Timber.d("position removed %d",viewHolder.getAdapterPosition());
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallBack);
+        itemTouchHelper.attachToRecyclerView(rvCategory);
     }
 }

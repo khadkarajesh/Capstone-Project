@@ -56,8 +56,7 @@ public class ExpenseTrackerContract {
             return ContentUris.withAppendedId(CONTENT_URI, expenseId);
         }
 
-        public static Uri buildExpenseCategoryUri(String startDate,String endDate)
-        {
+        public static Uri buildExpenseCategoryUri(String startDate, String endDate) {
             return CONTENT_URI.buildUpon().appendPath(startDate).appendPath(endDate).build();
         }
 
@@ -68,7 +67,6 @@ public class ExpenseTrackerContract {
         public static String getStartDateOfMonth(Uri uri) {
             return uri.getPathSegments().get(1);
         }
-
     }
 
     public static class ExpenseCategoriesEntry implements BaseColumns {
@@ -84,6 +82,14 @@ public class ExpenseTrackerContract {
 
         public static Uri buildAccountUri(long categoryId) {
             return ContentUris.withAppendedId(CONTENT_URI, categoryId);
+        }
+
+        public static Uri buildUriWithCategoryId(int id) {
+            return CONTENT_URI.buildUpon().appendPath("" + id).build();
+        }
+
+        public static int getCategoryId(Uri uri) {
+            return Integer.parseInt(uri.getPathSegments().get(1));
         }
     }
 }

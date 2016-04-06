@@ -43,7 +43,7 @@ public class ExpenseTrackerDbHelper extends SQLiteOpenHelper {
                 + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID + " INTEGER NOT NULL,"
                 + " FOREIGN KEY(" + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID + ")"
                 + "REFERENCES " + ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME
-                + "(" + ExpenseTrackerContract.ExpenseCategoriesEntry._ID + ")"
+                + "(" + ExpenseTrackerContract.ExpenseCategoriesEntry._ID + ") ON DELETE CASCADE "
                 + ");";
 
         db.execSQL(CREATE_ACCOUNT_TABLE);
@@ -57,5 +57,11 @@ public class ExpenseTrackerDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ExpenseTrackerContract.ExpenseEntry.TABLE_NAME);
         onCreate(db);
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.execSQL("PRAGMA foreign_keys=ON");
     }
 }

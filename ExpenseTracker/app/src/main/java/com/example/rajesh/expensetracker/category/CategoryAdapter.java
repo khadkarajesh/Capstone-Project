@@ -6,17 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.rajesh.expensetracker.ExpenseTrackerApplication;
 import com.example.rajesh.expensetracker.R;
+import com.example.rajesh.expensetracker.data.ExpenseTrackerContract;
 import com.example.rajesh.expensetracker.widget.CircularView;
 
 import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ExpenseHolder> {
 
-    ArrayList<ExpenseCategory> expense = new ArrayList<>();
+    ArrayList<ExpenseCategory> categories = new ArrayList<>();
 
     public CategoryAdapter(ArrayList<ExpenseCategory> expenses) {
-        this.expense = expenses;
+        this.categories = expenses;
     }
 
     @Override
@@ -27,17 +29,25 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Expens
 
     @Override
     public void onBindViewHolder(ExpenseHolder holder, int position) {
-        holder.expenseTitle.setText(expense.get(position).categoryTitle);
-        holder.circularView.setFillColor(expense.get(position).categoryColor);
+        holder.expenseTitle.setText(categories.get(position).categoryTitle);
+        holder.circularView.setFillColor(categories.get(position).categoryColor);
     }
 
     @Override
     public int getItemCount() {
-        return expense.size();
+        return categories.size();
     }
 
     public void addCategories(ArrayList<ExpenseCategory> expenses) {
-        expense.addAll(expenses);
+        categories.addAll(expenses);
+        notifyDataSetChanged();
+    }
+
+    public void deleteItem(int itemPosition) {
+        ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().delete(ExpenseTrackerContract.ExpenseCategoriesEntry.buildUriWithCategoryId(categories.get(itemPosition).id),null,null);
+        categories.remove(itemPosition);
+        notifyItemRangeRemoved(itemPosition, categories.size());
+        notifyItemRemoved(itemPosition);
         notifyDataSetChanged();
     }
 

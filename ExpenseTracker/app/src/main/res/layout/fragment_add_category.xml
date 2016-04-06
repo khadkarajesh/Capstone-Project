@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Category Name"
-            android:inputType="textPersonName"
             android:text="Entertainment" />
     </android.support.design.widget.TextInputLayout>
 

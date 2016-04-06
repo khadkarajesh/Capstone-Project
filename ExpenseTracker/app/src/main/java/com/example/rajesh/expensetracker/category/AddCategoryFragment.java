@@ -21,7 +21,6 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import me.priyesh.chroma.ChromaDialog;
 import me.priyesh.chroma.ColorSelectListener;
-import timber.log.Timber;
 
 
 public class AddCategoryFragment extends BaseFragment {
@@ -31,9 +30,6 @@ public class AddCategoryFragment extends BaseFragment {
 
     @Bind(R.id.iv_color_picker)
     ImageView ivColorPicker;
-
-
-    String color;
 
     String hexColor;
 
@@ -45,9 +41,9 @@ public class AddCategoryFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //ivColorPicker.setBackgroundColor(Color.parseColor());
-        //ivColorPicker.setColorFilter(color);
+        ivColorPicker.setBackgroundColor(Color.parseColor("#ff08f0"));
     }
+
 
     @OnClick({R.id.iv_color_picker, R.id.btn_add_category})
     public void onClick(View view) {
@@ -57,10 +53,7 @@ public class AddCategoryFragment extends BaseFragment {
                     .onColorSelected(new ColorSelectListener() {
                         @Override
                         public void onColorSelected(@ColorInt int i) {
-                            //color =i;
-                            //Timber.d("color code %d", color);
                             hexColor = String.format("#%06X", (0xFFFFFF & i));
-                            Timber.d("color code %s",hexColor);
                         }
                     })
                     .create()
