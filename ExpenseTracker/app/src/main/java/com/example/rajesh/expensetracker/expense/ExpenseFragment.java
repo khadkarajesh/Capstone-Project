@@ -34,7 +34,6 @@ import timber.log.Timber;
 
 public class ExpenseFragment extends BaseFragment implements CategoryView,ExpenseView.Storage{
 
-
     @Bind(R.id.edt_expense_date)
     EditText edtExpenseDate;
 

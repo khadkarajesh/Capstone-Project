@@ -16,20 +16,29 @@ import com.example.rajesh.expensetracker.category.AddCategoryFragment;
 import com.example.rajesh.expensetracker.category.CategoryFragment;
 import com.example.rajesh.expensetracker.category.CategoryLongPressListener;
 import com.example.rajesh.expensetracker.category.ExpenseCategory;
+import com.example.rajesh.expensetracker.dashboard.DashBoardFragment;
 import com.example.rajesh.expensetracker.expense.ExpenseFragment;
 import com.example.rajesh.expensetracker.report.ReportFragment;
-
-import timber.log.Timber;
 
 public class DashboardActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, CategoryLongPressListener {
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        bindView();
+
         setSupportActionBar(toolbar);
 
+        setNavigationDrawer();
+
+        addFragment(AddCategoryFragment.getInstance(null), Constant.FragmentTag.DASHBOARD_FRAGMENT_TAG);
+    }
+
+    private void setNavigationDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -38,10 +47,11 @@ public class DashboardActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
-        addFragment(AddCategoryFragment.getInstance(null), "add_category_fragment");
-
-        //getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, new AddCategoryFragment(), "fragment").commit();
+    private void bindView() {
+        //dashboardCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
     }
 
 
@@ -80,19 +90,34 @@ public class DashboardActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         Fragment fragment = null;
+        String fragmentTag = null;
 
-        if (id == R.id.nav_account) {
-            fragment = new AccountFragment();
-        } else if (id == R.id.nav_categories) {
-            fragment = new CategoryFragment();
-        } else if (id == R.id.nav_history_report) {
-            fragment = new ReportFragment();
-        } else if (id == R.id.nav_recurring_expense) {
-            fragment = new ExpenseFragment();
-        } else if (id == R.id.nav_settings) {
+        switch (id) {
+            case R.id.nav_account:
+                fragment = new AccountFragment();
+                fragmentTag = Constant.FragmentTag.ACCOUNT_FRAGMENT;
+                break;
+            case R.id.nav_categories:
+                fragment = new CategoryFragment();
+                fragmentTag = Constant.FragmentTag.CATEGORY_FRAGMENT;
+                break;
+            case R.id.nav_history_report:
+                fragment = new ReportFragment();
+                fragmentTag = Constant.FragmentTag.REPORT_FRAGMENT;
+                break;
+            case R.id.nav_recurring_expense:
+                fragment = new ExpenseFragment();
+                fragmentTag = Constant.FragmentTag.EXPENSE_FRAGMENT;
+                break;
+            case R.id.nav_settings:
 
+                break;
+            case R.id.nav_dashboard:
+                fragment = new DashBoardFragment();
+                fragmentTag = Constant.FragmentTag.DASHBOARD_FRAGMENT_TAG;
+                break;
         }
-        addFragment(fragment, "fragment");
+        addFragment(fragment, fragmentTag);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -100,9 +125,8 @@ public class DashboardActivity extends BaseActivity
 
     @Override
     public void onCategoryLongPress(ExpenseCategory expenseCategory) {
-        Timber.d("expenseTracker %s",expenseCategory.categoryTitle);
         AddCategoryFragment addCategoryFragment = AddCategoryFragment.getInstance(expenseCategory);
-        addFragment(addCategoryFragment, "category_fragment");
+        addFragment(addCategoryFragment, Constant.FragmentTag.CATEGORY_FRAGMENT);
     }
 
     private void addFragment(Fragment fragment, String tag) {
