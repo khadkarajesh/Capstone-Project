@@ -33,6 +33,7 @@ public class ExpenseModel implements ExpenseModelContract {
                 Expense expense = new Expense();
                 ExpenseCategory expenseCategory = new ExpenseCategory();
 
+                expense.expenseId = cursor.getInt(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry._ID));
                 expense.expenseTitle = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TITLE));
                 expense.expenseAmount = cursor.getInt(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_AMOUNT));
                 expense.categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID));
@@ -47,6 +48,6 @@ public class ExpenseModel implements ExpenseModelContract {
                 expenseCategories.add(expenseCategory);
             }
         }
-        onExpenseResultListener.onExpenseSuccess(expenses,expenseCategories);
+        onExpenseResultListener.onExpenseSuccess(expenses, expenseCategories);
     }
 }

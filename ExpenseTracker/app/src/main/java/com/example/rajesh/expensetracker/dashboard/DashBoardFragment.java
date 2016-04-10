@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.example.rajesh.expensetracker.R;
@@ -48,8 +49,22 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
         ArrayList<Expense> expenses = new ArrayList<>();
         ArrayList<ExpenseCategory> expenseCategories = new ArrayList<>();
         rvDashBoard.setLayoutManager(new LinearLayoutManager(getActivity()));
-        expenseAdapter = new ExpenseAdapter(expenses,expenseCategories);
+        expenseAdapter = new ExpenseAdapter(expenses, expenseCategories);
         rvDashBoard.setAdapter(expenseAdapter);
+
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                expenseAdapter.deleteItem(viewHolder.getAdapterPosition());
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(rvDashBoard);
     }
 
     @Override
@@ -58,8 +73,8 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
     }
 
     @Override
-    public void showExpenses(ArrayList<Expense> expenses, ArrayList<ExpenseCategory>categories) {
-        expenseAdapter.addExpenses(expenses,categories);
+    public void showExpenses(ArrayList<Expense> expenses, ArrayList<ExpenseCategory> categories) {
+        expenseAdapter.addExpenses(expenses, categories);
     }
 
     @Override

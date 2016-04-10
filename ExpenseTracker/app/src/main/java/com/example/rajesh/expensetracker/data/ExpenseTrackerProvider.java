@@ -27,6 +27,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
     private static final int SINGLE_EXPENSE = 201;
     private static final int EXPENSE_LIST = 202;
     private static final int EXPENSE_WITH_CATEGORY = 203;
+    private static final int EXPENSE_BY_ID = 204;
 
 
     private static final int CATEGORY = 300;
@@ -112,6 +113,8 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 return ExpenseTrackerContract.ExpenseEntry.CONTENT_TYPE;
             case CATEGORY_BY_ID:
                 return ExpenseTrackerContract.ExpenseCategoriesEntry.CONTENT_ITEM_TYPE;
+            case EXPENSE_BY_ID:
+                return ExpenseTrackerContract.ExpenseEntry.CONTENT_ITEM_TYPE;
         }
 
         return null;
@@ -160,6 +163,10 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 int categoryId = ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
                 rowDeleted = dbHelper.getWritableDatabase().delete(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, ExpenseTrackerContract.ExpenseCategoriesEntry._ID + " = ?", new String[]{"" + categoryId});
                 break;
+            case EXPENSE_BY_ID:
+                int expenseId = ExpenseTrackerContract.ExpenseEntry.getExpenseId(uri);
+                rowDeleted = dbHelper.getWritableDatabase().delete(ExpenseTrackerContract.ExpenseEntry.TABLE_NAME, ExpenseTrackerContract.ExpenseEntry._ID + " =?", new String[]{"" + expenseId});
+                break;
             default:
                 Timber.d("failed to delete data");
         }
@@ -203,6 +210,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*", EXPENSE_LIST);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/#", SINGLE_EXPENSE);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*", EXPENSE_WITH_CATEGORY);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*", EXPENSE_BY_ID);
 
         return uriMatcher;
     }
