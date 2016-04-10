@@ -17,11 +17,13 @@ import com.example.rajesh.expensetracker.category.CategoryFragment;
 import com.example.rajesh.expensetracker.category.CategoryLongPressListener;
 import com.example.rajesh.expensetracker.category.ExpenseCategory;
 import com.example.rajesh.expensetracker.dashboard.DashBoardFragment;
+import com.example.rajesh.expensetracker.dashboard.Expense;
 import com.example.rajesh.expensetracker.expense.ExpenseFragment;
+import com.example.rajesh.expensetracker.expense.ExpenseLongPressListener;
 import com.example.rajesh.expensetracker.report.ReportFragment;
 
 public class DashboardActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, CategoryLongPressListener {
+        implements NavigationView.OnNavigationItemSelectedListener, CategoryLongPressListener, ExpenseLongPressListener {
 
     Toolbar toolbar;
 
@@ -50,7 +52,6 @@ public class DashboardActivity extends BaseActivity
     }
 
     private void bindView() {
-        //dashboardCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
     }
 
@@ -85,6 +86,12 @@ public class DashboardActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -106,7 +113,7 @@ public class DashboardActivity extends BaseActivity
                 fragmentTag = Constant.FragmentTag.REPORT_FRAGMENT;
                 break;
             case R.id.nav_recurring_expense:
-                fragment = new ExpenseFragment();
+                fragment = ExpenseFragment.getInstance(null, null);
                 fragmentTag = Constant.FragmentTag.EXPENSE_FRAGMENT;
                 break;
             case R.id.nav_settings:
@@ -129,7 +136,14 @@ public class DashboardActivity extends BaseActivity
         addFragment(addCategoryFragment, Constant.FragmentTag.CATEGORY_FRAGMENT);
     }
 
+
     private void addFragment(Fragment fragment, String tag) {
         getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, fragment, tag).commit();
+    }
+
+    @Override
+    public void onExpenseLongPress(Expense expense, ExpenseCategory expenseCategory) {
+        ExpenseFragment expenseFragment = ExpenseFragment.getInstance(null, null);
+        addFragment(expenseFragment, Constant.FragmentTag.EXPENSE_FRAGMENT);
     }
 }

@@ -9,9 +9,10 @@ import com.example.rajesh.expensetracker.ExpenseTrackerApplication;
 import com.example.rajesh.expensetracker.dashboard.Expense;
 import com.example.rajesh.expensetracker.data.ExpenseTrackerContract;
 
+import timber.log.Timber;
+
 public class ExpenseStorageModel implements ExpenseViewStorageModelContract {
     public ExpenseStorageModel() {
-
     }
 
     @Override
@@ -28,6 +29,25 @@ public class ExpenseStorageModel implements ExpenseViewStorageModelContract {
             onExpenseSaveListener.onExpenseSaveSuccess();
         } else {
             onExpenseSaveListener.onExpenseSaveFailure("failed to insert data");
+        }
+    }
+
+    @Override
+    public void updateExpense(Expense expense, OnExpenseSaveListener onExpenseSaveListener) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TITLE, expense.expenseTitle);
+        contentValues.put(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE, expense.expenseDate);
+        contentValues.put(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_AMOUNT, expense.expenseAmount);
+        contentValues.put(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DESCRIPTION, expense.expenseDescription);
+        contentValues.put(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID, expense.categoryId);
+        contentValues.put(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TYPE, expense.expenseType);
+
+        Timber.d("expense id %d",expense.expenseId);
+        int updateId = ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().update(ExpenseTrackerContract.ExpenseEntry.buildExpenseUri(expense.expenseId), contentValues, null, null);
+        if (updateId > 0) {
+            onExpenseSaveListener.onExpenseSaveSuccess();
+        } else {
+            onExpenseSaveListener.onExpenseSaveFailure("Failed to update data");
         }
     }
 }

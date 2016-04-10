@@ -5,4 +5,6 @@ import com.example.rajesh.expensetracker.dashboard.Expense;
 
 public interface ExpenseStoragePresenterContract {
     void saveExpense(Expense expense);
+
+    void updateExpense(Expense expense);
 }

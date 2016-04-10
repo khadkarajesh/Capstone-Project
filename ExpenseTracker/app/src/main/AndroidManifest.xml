@@ -27,7 +27,8 @@
             android:exported="false"
             android:syncable="true" />
 
-        <activity android:name=".HitActivity"></activity>
+        <activity android:name=".HitActivity" />
+        <activity android:name=".expense.ExpenseEditActivity"></activity>
     </application>
 
 </manifest>

@@ -49,7 +49,7 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
         ArrayList<Expense> expenses = new ArrayList<>();
         ArrayList<ExpenseCategory> expenseCategories = new ArrayList<>();
         rvDashBoard.setLayoutManager(new LinearLayoutManager(getActivity()));
-        expenseAdapter = new ExpenseAdapter(expenses, expenseCategories);
+        expenseAdapter = new ExpenseAdapter(getActivity(),expenses, expenseCategories);
         rvDashBoard.setAdapter(expenseAdapter);
 
         ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {

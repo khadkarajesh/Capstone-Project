@@ -184,6 +184,11 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 int categoryId = ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
                 updateId = dbHelper.getWritableDatabase().update(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, values, ExpenseTrackerContract.ExpenseCategoriesEntry._ID + " = ?", new String[]{"" + categoryId});
                 break;
+            case EXPENSE_BY_ID:
+                int expenseId = ExpenseTrackerContract.ExpenseEntry.getExpenseId(uri);
+                Timber.d("expense id %d", expenseId);
+                updateId = dbHelper.getWritableDatabase().update(ExpenseTrackerContract.ExpenseEntry.TABLE_NAME, values, ExpenseTrackerContract.ExpenseEntry._ID + " =?", new String[]{"" + expenseId});
+                break;
         }
         if (updateId != 0) {
             getContext().getContentResolver().notifyChange(uri, null);

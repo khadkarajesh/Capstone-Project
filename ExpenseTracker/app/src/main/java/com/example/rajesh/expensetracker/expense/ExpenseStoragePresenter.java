@@ -20,6 +20,11 @@ public class ExpenseStoragePresenter implements ExpenseStoragePresenterContract,
     }
 
     @Override
+    public void updateExpense(Expense expense) {
+        expenseViewStorageModelContract.updateExpense(expense, this);
+    }
+
+    @Override
     public void onExpenseSaveSuccess() {
         expenseView.dataSaveSuccess();
     }

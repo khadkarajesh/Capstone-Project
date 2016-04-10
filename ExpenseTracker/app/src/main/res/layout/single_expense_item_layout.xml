@@ -12,13 +12,14 @@
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
+        android:id="@+id/ll_dashboard_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
         android:orientation="horizontal"
         android:paddingBottom="16dp"
         android:paddingLeft="8dp"
-        android:clickable="true"
-        android:background="?android:selectableItemBackground"
         android:paddingTop="16dp">
 
         <com.example.rajesh.expensetracker.widget.CircularView

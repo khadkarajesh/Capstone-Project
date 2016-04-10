@@ -4,6 +4,10 @@ public class Constant {
     public static final String RECURRING_TYPE = "recurring";
     public static final String NON_RECURRING_TYPE = "non-recurring";
 
+    public static final String EXPENSE = "expense";
+    public static final String EXPENSE_CATEGORY = "expense_category";
+    public static final String EXPENSE_EDIT_ACTIVITY_BUNDLE = "expense_edit_activity_bundle";
+
     public static class FragmentTag {
         public static final String DASHBOARD_FRAGMENT_TAG = "dashboard_fragment";
         public static final String EXPENSE_FRAGMENT = "expense_fragment";
