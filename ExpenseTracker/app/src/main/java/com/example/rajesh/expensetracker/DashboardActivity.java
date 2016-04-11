@@ -20,6 +20,7 @@ import com.example.rajesh.expensetracker.dashboard.DashBoardFragment;
 import com.example.rajesh.expensetracker.dashboard.Expense;
 import com.example.rajesh.expensetracker.expense.ExpenseFragment;
 import com.example.rajesh.expensetracker.expense.ExpenseLongPressListener;
+import com.example.rajesh.expensetracker.expense.recurring.RecurringFragment;
 import com.example.rajesh.expensetracker.report.ReportFragment;
 
 public class DashboardActivity extends BaseActivity
@@ -113,7 +114,7 @@ public class DashboardActivity extends BaseActivity
                 fragmentTag = Constant.FragmentTag.REPORT_FRAGMENT;
                 break;
             case R.id.nav_recurring_expense:
-                fragment = ExpenseFragment.getInstance(null, null);
+                fragment = new RecurringFragment();
                 fragmentTag = Constant.FragmentTag.EXPENSE_FRAGMENT;
                 break;
             case R.id.nav_settings:

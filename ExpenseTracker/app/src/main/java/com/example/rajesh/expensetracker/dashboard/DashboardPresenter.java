@@ -17,14 +17,14 @@ public class DashboardPresenter implements DashboardPresenterContract, OnExpense
     }
 
     @Override
-    public void getData() {
-        expenseModel.getExpense(this);
+    public void getData(String expenseType) {
+        expenseModel.getExpense(this, expenseType);
     }
 
 
     @Override
     public void onExpenseSuccess(ArrayList<Expense> expenses, ArrayList<ExpenseCategory> expenseCategories) {
-        expenseView.showExpenses(expenses,expenseCategories);
+        expenseView.showExpenses(expenses, expenseCategories);
     }
 
     @Override

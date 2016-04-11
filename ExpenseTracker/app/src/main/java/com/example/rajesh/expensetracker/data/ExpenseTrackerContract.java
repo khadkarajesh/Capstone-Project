@@ -64,12 +64,20 @@ public class ExpenseTrackerContract {
             return CONTENT_URI.buildUpon().appendPath(startDate).appendPath(endDate).build();
         }
 
+        public static Uri buildExpenseCategoryUriExpenseType(String startDate, String endDate, String expenseType) {
+            return CONTENT_URI.buildUpon().appendPath(startDate).appendPath(endDate).appendPath(expenseType).build();
+        }
+
         public static String getLastDateOfMonth(Uri uri) {
             return uri.getPathSegments().get(2);
         }
 
         public static String getStartDateOfMonth(Uri uri) {
             return uri.getPathSegments().get(1);
+        }
+
+        public static String getExpenseType(Uri uri) {
+            return uri.getPathSegments().get(3);
         }
 
         public static int getExpenseId(Uri uri) {
