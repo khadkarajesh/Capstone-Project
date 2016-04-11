@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.rajesh.expensetracker.account.AccountFragment;
+import com.example.rajesh.expensetracker.account.list.AccountFragment;
 import com.example.rajesh.expensetracker.base.activity.BaseActivity;
 import com.example.rajesh.expensetracker.category.AddCategoryFragment;
 import com.example.rajesh.expensetracker.category.CategoryFragment;
@@ -37,7 +37,7 @@ public class DashboardActivity extends BaseActivity
 
         setNavigationDrawer();
 
-        addFragment(AddCategoryFragment.getInstance(null), Constant.FragmentTag.DASHBOARD_FRAGMENT_TAG);
+        addFragment(new DashBoardFragment(), Constant.FragmentTag.DASHBOARD_FRAGMENT_TAG);
     }
 
     private void setNavigationDrawer() {
@@ -102,7 +102,7 @@ public class DashboardActivity extends BaseActivity
         switch (id) {
             case R.id.nav_account:
                 fragment = new AccountFragment();
-                fragmentTag = Constant.FragmentTag.ACCOUNT_FRAGMENT;
+                fragmentTag = "NewFragment";
                 break;
             case R.id.nav_categories:
                 fragment = new CategoryFragment();
@@ -138,7 +138,7 @@ public class DashboardActivity extends BaseActivity
 
 
     private void addFragment(Fragment fragment, String tag) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.ll_container, fragment, tag).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.ll_dashboard_wrapper, fragment, tag).commit();
     }
 
     @Override

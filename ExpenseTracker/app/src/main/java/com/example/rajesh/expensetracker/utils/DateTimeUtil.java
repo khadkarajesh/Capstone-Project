@@ -35,7 +35,7 @@ public class DateTimeUtil {
     }
 
     public static String getTimeInFormattedString(long milliSeconds) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         calendar.setTimeInMillis(milliSeconds);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd,yyy");

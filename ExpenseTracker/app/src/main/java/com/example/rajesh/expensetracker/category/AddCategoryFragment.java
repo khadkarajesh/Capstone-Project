@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.rajesh.expensetracker.Constant;
 import com.example.rajesh.expensetracker.R;
 import com.example.rajesh.expensetracker.base.frament.BaseFragment;
 import com.example.rajesh.expensetracker.data.ExpenseTrackerContract;
@@ -42,7 +43,7 @@ public class AddCategoryFragment extends BaseFragment {
     public static AddCategoryFragment getInstance(ExpenseCategory expenseCategory) {
         AddCategoryFragment addCategoryFragment = new AddCategoryFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(CATEGORY_FRAGMENT, expenseCategory);
+        bundle.putParcelable(Constant.CATEGORY, expenseCategory);
         addCategoryFragment.setArguments(bundle);
         return addCategoryFragment;
     }
@@ -65,8 +66,8 @@ public class AddCategoryFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments().getParcelable(CATEGORY_FRAGMENT) != null) {
-            expenseCategory = getArguments().getParcelable(CATEGORY_FRAGMENT);
+        if (getArguments().getParcelable(Constant.CATEGORY) != null) {
+            expenseCategory = getArguments().getParcelable(Constant.CATEGORY);
             Timber.d("onLongPressed");
         }
     }

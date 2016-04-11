@@ -21,6 +21,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
     private static final int ACCOUNT = 100;
     private static final int SINGLE_ACCOUNT = 101;
     private static final int ACCOUNT_LIST = 102;
+    private static final int ACCOUNT_BY_ID = 103;
 
 
     private static final int EXPENSE = 200;
@@ -84,6 +85,9 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 endDate = ExpenseTrackerContract.ExpenseEntry.getLastDateOfMonth(uri);
                 retCursor = sqLiteQueryBuilder.query(dbHelper.getWritableDatabase(), null, CATEGORY_AND_EXPENSE_BY_MONTH, new String[]{startDate, endDate}, null, null, ExpenseTrackerContract.ExpenseEntry.TABLE_NAME + "." + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE + " DESC");
                 break;
+            case ACCOUNT:
+                retCursor = sqLiteDatabase.query(ExpenseTrackerContract.AccountEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -101,6 +105,8 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 return ExpenseTrackerContract.AccountEntry.CONTENT_ITEM_TYPE;
             case ACCOUNT_LIST:
                 return ExpenseTrackerContract.AccountEntry.CONTENT_TYPE;
+            case ACCOUNT_BY_ID:
+                return ExpenseTrackerContract.AccountEntry.CONTENT_ITEM_TYPE;
             case EXPENSE:
                 return ExpenseTrackerContract.ExpenseEntry.CONTENT_ITEM_TYPE;
             case EXPENSE_LIST:
@@ -167,6 +173,10 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 int expenseId = ExpenseTrackerContract.ExpenseEntry.getExpenseId(uri);
                 rowDeleted = dbHelper.getWritableDatabase().delete(ExpenseTrackerContract.ExpenseEntry.TABLE_NAME, ExpenseTrackerContract.ExpenseEntry._ID + " =?", new String[]{"" + expenseId});
                 break;
+            case ACCOUNT_BY_ID:
+                int accountId = ExpenseTrackerContract.AccountEntry.getAccountId(uri);
+                rowDeleted = dbHelper.getWritableDatabase().delete(ExpenseTrackerContract.AccountEntry.TABLE_NAME, ExpenseTrackerContract.AccountEntry._ID + " =?", new String[]{"" + accountId});
+                break;
             default:
                 Timber.d("failed to delete data");
         }
@@ -189,6 +199,10 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 Timber.d("expense id %d", expenseId);
                 updateId = dbHelper.getWritableDatabase().update(ExpenseTrackerContract.ExpenseEntry.TABLE_NAME, values, ExpenseTrackerContract.ExpenseEntry._ID + " =?", new String[]{"" + expenseId});
                 break;
+            case ACCOUNT_BY_ID:
+                int accountId = ExpenseTrackerContract.AccountEntry.getAccountId(uri);
+                updateId = dbHelper.getWritableDatabase().update(ExpenseTrackerContract.AccountEntry.TABLE_NAME, values, ExpenseTrackerContract.ExpenseEntry._ID + " =?", new String[]{"" + accountId});
+                break;
         }
         if (updateId != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
@@ -204,6 +218,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH, ACCOUNT);
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/*", ACCOUNT_LIST);
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/#", SINGLE_ACCOUNT);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/*", ACCOUNT_BY_ID);
 
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH, CATEGORY);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/*", CATEGORY_LIST);

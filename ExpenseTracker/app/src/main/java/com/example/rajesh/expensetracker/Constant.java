@@ -8,6 +8,14 @@ public class Constant {
     public static final String EXPENSE_CATEGORY = "expense_category";
     public static final String EXPENSE_EDIT_ACTIVITY_BUNDLE = "expense_edit_activity_bundle";
 
+
+    public static final String ACCOUNT = "account";
+    public static final String ACCOUNT_EDIT_ACTIVITY_BUNDLE = "expense_edit_activity_bundle";
+
+    public static final String CATEGORY = "category";
+    public static final String CATEGORY_EDIT_ACTIVITY_BUNDLE = "category_edit_activity_bundle";
+
+
     public static class FragmentTag {
         public static final String DASHBOARD_FRAGMENT_TAG = "dashboard_fragment";
         public static final String EXPENSE_FRAGMENT = "expense_fragment";

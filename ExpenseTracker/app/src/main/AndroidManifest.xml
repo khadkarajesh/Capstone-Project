@@ -28,7 +28,9 @@
             android:syncable="true" />
 
         <activity android:name=".HitActivity" />
-        <activity android:name=".expense.ExpenseEditActivity"></activity>
+        <activity android:name=".expense.ExpenseEditActivity" />
+        <activity android:name=".account.edit.AccountEditActivity" />
+        <activity android:name=".category.CategoryEditActivity"></activity>
     </application>
 
 </manifest>

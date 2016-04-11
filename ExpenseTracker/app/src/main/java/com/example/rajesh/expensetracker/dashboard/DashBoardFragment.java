@@ -9,12 +9,17 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.example.rajesh.expensetracker.R;
+import com.example.rajesh.expensetracker.account.edit.AccountEditActivity;
 import com.example.rajesh.expensetracker.base.frament.BaseFragment;
 import com.example.rajesh.expensetracker.category.ExpenseCategory;
+import com.example.rajesh.expensetracker.expense.ExpenseEditActivity;
+import com.github.clans.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
+import butterknife.OnClick;
+import timber.log.Timber;
 
 
 public class DashBoardFragment extends BaseFragment implements ExpenseView.Display {
@@ -24,6 +29,8 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
     RecyclerView rvDashBoard;
 
     DashboardPresenter dashboardPresenter;
+
+    FloatingActionButton fabAddExpense;
 
 
     public DashBoardFragment() {
@@ -37,7 +44,6 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
 
         dashboardPresenter = new DashboardPresenter(this);
         dashboardPresenter.getData();
-
     }
 
     @Override
@@ -49,7 +55,7 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
         ArrayList<Expense> expenses = new ArrayList<>();
         ArrayList<ExpenseCategory> expenseCategories = new ArrayList<>();
         rvDashBoard.setLayoutManager(new LinearLayoutManager(getActivity()));
-        expenseAdapter = new ExpenseAdapter(getActivity(),expenses, expenseCategories);
+        expenseAdapter = new ExpenseAdapter(getActivity(), expenses, expenseCategories);
         rvDashBoard.setAdapter(expenseAdapter);
 
         ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -65,6 +71,20 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(rvDashBoard);
+    }
+
+    @OnClick({R.id.fab_add_expense, R.id.fab_add_account})
+    public void onClick(View view) {
+        Timber.d("clicked");
+        switch (view.getId()) {
+            case R.id.fab_add_account:
+                Timber.d("add account button clicked");
+                getActivity().startActivity(AccountEditActivity.getLaunchIntent(getActivity(), null));
+                break;
+            case R.id.fab_add_expense:
+                getActivity().startActivity(ExpenseEditActivity.getLaunchIntent(getActivity(), null, null));
+                break;
+        }
     }
 
     @Override

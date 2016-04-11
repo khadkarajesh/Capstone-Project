@@ -1,4 +1,4 @@
-package com.example.rajesh.expensetracker.account;
+package com.example.rajesh.expensetracker.account.edit;
 
 
 import android.app.DatePickerDialog;
@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,7 +14,9 @@ import android.widget.Toast;
 import com.example.rajesh.expensetracker.Constant;
 import com.example.rajesh.expensetracker.R;
 import com.example.rajesh.expensetracker.TestActivity;
+import com.example.rajesh.expensetracker.account.Account;
 import com.example.rajesh.expensetracker.base.frament.BaseFragment;
+import com.example.rajesh.expensetracker.utils.DateTimeUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,7 +27,7 @@ import butterknife.OnClick;
 import timber.log.Timber;
 
 
-public class AccountFragment extends BaseFragment implements AccountView {
+public class AddAccountFragment extends BaseFragment implements AccountAddView {
 
     @Bind(R.id.edt_account_title)
     EditText edtAccountTitle;
@@ -40,51 +41,75 @@ public class AccountFragment extends BaseFragment implements AccountView {
     @Bind(R.id.swh_account_type)
     SwitchCompat swhAccountType;
 
-    @Bind(R.id.btn_add_contact)
-    Button btnAddContact;
+    AddAccountPresenterContract addAccountPresenterContract;
 
-    AccountPresenterContract accountPresenterContract;
     long accountCreationTime;
+    Account mAccount;
 
-    public AccountFragment() {
-        // Required empty public constructor
+    public static AddAccountFragment getInstance(Account account) {
+        AddAccountFragment addAccountFragment = new AddAccountFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constant.ACCOUNT, account);
+        addAccountFragment.setArguments(bundle);
+        return addAccountFragment;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        accountPresenterContract = new AccountPresenter(this);
+        addAccountPresenterContract = new AddAccountPresenter(this);
 
         edtAccountCreateDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     edtAccountCreateDate.setText(getExpenseDate());
-                } else {
-
                 }
             }
         });
 
+        if (mAccount != null) {
+            edtAccountTitle.setText(mAccount.accountName);
+            edtAccountAmount.setText("" + mAccount.amount);
+            edtAccountCreateDate.setText(DateTimeUtil.getTimeInFormattedString(mAccount.date));
+            swhAccountType.setChecked(mAccount.accountType.equals(Constant.RECURRING_TYPE) ? true : false);
+        }
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments().getParcelable(Constant.ACCOUNT) != null) {
+            mAccount = getArguments().getParcelable(Constant.ACCOUNT);
+            accountCreationTime = mAccount.date;
+        }
     }
 
     @OnClick({R.id.btn_add_contact})
     public void onClick() {
-        addAccount();
+        if (mAccount == null) {
+            addAccountPresenterContract.addAccount(getAccount());
+        } else {
+            addAccountPresenterContract.updateAccount(getAccount());
+        }
     }
 
-    private void addAccount() {
+    private Account getAccount() {
         Account account = new Account();
+        if (mAccount != null) {
+            account.accountId = mAccount.accountId;
+        }
         account.accountName = edtAccountTitle.getText().toString();
         account.amount = Integer.parseInt(edtAccountAmount.getText().toString());
         account.date = accountCreationTime;
         account.accountType = swhAccountType.isChecked() ? Constant.RECURRING_TYPE : Constant.NON_RECURRING_TYPE;
-        accountPresenterContract.addAccount(account);
+        return account;
     }
 
     @Override
     protected int getLayout() {
-        return R.layout.fragment_account;
+        return R.layout.add_fragment_account;
     }
 
     @Override

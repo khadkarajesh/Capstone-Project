@@ -35,6 +35,10 @@ public class ExpenseTrackerContract {
             return ContentUris.withAppendedId(CONTENT_URI, accountId);
         }
 
+        public static int getAccountId(Uri uri) {
+            return Integer.parseInt(uri.getPathSegments().get(1));
+        }
+
     }
 
     public static class ExpenseEntry implements BaseColumns {
@@ -71,6 +75,7 @@ public class ExpenseTrackerContract {
         public static int getExpenseId(Uri uri) {
             return Integer.parseInt(uri.getPathSegments().get(1));
         }
+
         public static Uri buildUriWithExpenseId(int id) {
             return CONTENT_URI.buildUpon().appendPath("" + id).build();
         }

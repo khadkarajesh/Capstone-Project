@@ -15,8 +15,6 @@ import com.example.rajesh.expensetracker.widget.CircularView;
 
 import java.util.ArrayList;
 
-import timber.log.Timber;
-
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ExpenseHolder> {
 
     ArrayList<ExpenseCategory> categories = new ArrayList<>();
@@ -46,9 +44,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Expens
         holder.llContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (categoryLongPressListener != null) {
-                    categoryLongPressListener.onCategoryLongPress(categories.get(position));
-                }
+                context.startActivity(CategoryEditActivity.getLaunchIntent(context, categories.get(position)));
                 return false;
             }
         });
