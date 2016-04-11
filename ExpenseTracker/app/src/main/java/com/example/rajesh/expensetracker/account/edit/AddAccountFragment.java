@@ -43,7 +43,7 @@ public class AddAccountFragment extends BaseFragment implements AccountAddView {
 
     AddAccountPresenterContract addAccountPresenterContract;
 
-    long accountCreationTime;
+    long accountCreationTime = 0;
     Account mAccount;
 
     public static AddAccountFragment getInstance(Account account) {
@@ -71,7 +71,7 @@ public class AddAccountFragment extends BaseFragment implements AccountAddView {
         if (mAccount != null) {
             edtAccountTitle.setText(mAccount.accountName);
             edtAccountAmount.setText("" + mAccount.amount);
-            edtAccountCreateDate.setText(DateTimeUtil.getTimeInFormattedString(mAccount.date));
+            edtAccountCreateDate.setText(DateTimeUtil.getTimeInFormattedString(accountCreationTime));
             swhAccountType.setChecked(mAccount.accountType.equals(Constant.RECURRING_TYPE) ? true : false);
         }
 
@@ -83,6 +83,7 @@ public class AddAccountFragment extends BaseFragment implements AccountAddView {
         if (getArguments().getParcelable(Constant.ACCOUNT) != null) {
             mAccount = getArguments().getParcelable(Constant.ACCOUNT);
             accountCreationTime = mAccount.date;
+            Timber.d("called time in millis %d", accountCreationTime);
         }
     }
 

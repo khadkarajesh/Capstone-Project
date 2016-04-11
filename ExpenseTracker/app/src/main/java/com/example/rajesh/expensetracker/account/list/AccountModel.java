@@ -21,7 +21,7 @@ public class AccountModel implements AccountModelContract {
                 account.accountId = cursor.getInt(cursor.getColumnIndex(ExpenseTrackerContract.AccountEntry._ID));
                 account.accountName = cursor.getString(cursor.getColumnIndex(ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_TITLE));
                 account.amount = cursor.getInt(cursor.getColumnIndex(ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_AMOUNT));
-                account.date = cursor.getInt(cursor.getColumnIndex(ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_CREATED_DATE));
+                account.date = cursor.getLong(cursor.getColumnIndex(ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_CREATED_DATE));
                 account.accountType = cursor.getString(cursor.getColumnIndex(ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_TYPE));
                 accounts.add(account);
             }
