@@ -42,14 +42,13 @@
                         android:textColor="@android:color/white" />
 
                     <ProgressBar
+                        android:id="@+id/progress_amount"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="0dp"
                         android:layout_height="5dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="16dp"
                         android:layout_weight="3"
-                        android:max="100"
-                        android:progress="30"
                         android:progressDrawable="@drawable/green_progress_horizontal" />
 
                     <TextView
@@ -80,14 +79,13 @@
                         android:textColor="@android:color/white" />
 
                     <ProgressBar
+                        android:id="@+id/progress_expense"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="0dp"
                         android:layout_height="5dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="16dp"
                         android:layout_weight="3"
-                        android:max="100"
-                        android:progress="30"
                         android:progressDrawable="@drawable/red_progress_horizontal" />
 
                     <TextView

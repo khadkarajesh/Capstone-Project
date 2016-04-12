@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.rajesh.expensetracker.R;
@@ -37,9 +38,16 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
     @Bind(R.id.tv_remaining_amount)
     TextView tvRemainingAmount;
 
+    @Bind(R.id.progress_amount)
+    ProgressBar progressAmount;
+
+    @Bind(R.id.progress_expense)
+    ProgressBar progressExpense;
+
     DashboardPresenter dashboardPresenter;
     long mExpenses = 0;
     long mTotalAmount = 0;
+    long remainingAmount = 0;
 
     public DashBoardFragment() {
         // Required empty public constructor
@@ -55,10 +63,18 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
         dashboardPresenter.getTotalAmount();
 
         tvRemainingAmount.setText("" + getRemainingAmount());
+
+        progressAmount.setMax((int) mTotalAmount);
+        progressAmount.setProgress((int) remainingAmount);
+
+        progressExpense.setMax((int) mTotalAmount);
+        progressExpense.setProgress((int) mExpenses);
+
+
     }
 
     private long getRemainingAmount() {
-        return mTotalAmount - mExpenses;
+        return remainingAmount = mTotalAmount - mExpenses;
     }
 
     @Override
