@@ -33,9 +33,10 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="8dp"
+                        android:layout_weight="1"
                         android:text="Amount"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         android:textColor="@android:color/white" />
@@ -43,12 +44,13 @@
                     <ProgressBar
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="5dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="8dp"
-                        android:layout_weight="5"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="3"
                         android:max="100"
-                        android:progress="30" />
+                        android:progress="30"
+                        android:progressDrawable="@drawable/green_progress_horizontal" />
 
                     <TextView
                         android:id="@+id/tv_total_amount"
@@ -69,9 +71,10 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="8dp"
+                        android:layout_weight="1"
                         android:text="Expense"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         android:textColor="@android:color/white" />
@@ -79,12 +82,13 @@
                     <ProgressBar
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="5dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="8dp"
-                        android:layout_weight="5"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="3"
                         android:max="100"
-                        android:progress="30" />
+                        android:progress="30"
+                        android:progressDrawable="@drawable/red_progress_horizontal" />
 
                     <TextView
                         android:id="@+id/tv_total_expense"

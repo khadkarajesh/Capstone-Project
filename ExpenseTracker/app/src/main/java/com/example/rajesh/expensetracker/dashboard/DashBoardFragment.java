@@ -34,6 +34,9 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
     @Bind(R.id.tv_total_expense)
     TextView tvTotalExpense;
 
+    @Bind(R.id.tv_remaining_amount)
+    TextView tvRemainingAmount;
+
     DashboardPresenter dashboardPresenter;
     long mExpenses = 0;
     long mTotalAmount = 0;
@@ -49,8 +52,13 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
 
         dashboardPresenter = new DashboardPresenter(this);
         dashboardPresenter.getData(null);
-
         dashboardPresenter.getTotalAmount();
+
+        tvRemainingAmount.setText("" + getRemainingAmount());
+    }
+
+    private long getRemainingAmount() {
+        return mTotalAmount - mExpenses;
     }
 
     @Override
