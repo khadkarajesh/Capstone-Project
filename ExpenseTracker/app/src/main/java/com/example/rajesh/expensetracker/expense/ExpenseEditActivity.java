@@ -17,6 +17,10 @@ public class ExpenseEditActivity extends BaseActivity {
     Expense expense = null;
     ExpenseCategory expenseCategory = null;
     Toolbar toolbar;
+    String toolbarTitle;
+
+    private static final String ADD_EXPENSE = "Add Expense";
+    private static final String EDIT_EXPENSE = "Edit Expense";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +41,10 @@ public class ExpenseEditActivity extends BaseActivity {
         if (getIntent().getBundleExtra(Constant.EXPENSE_EDIT_ACTIVITY_BUNDLE) != null) {
             expense = getIntent().getBundleExtra(Constant.EXPENSE_EDIT_ACTIVITY_BUNDLE).getParcelable(Constant.EXPENSE);
             expenseCategory = getIntent().getBundleExtra(Constant.EXPENSE_EDIT_ACTIVITY_BUNDLE).getParcelable(Constant.EXPENSE_CATEGORY);
+            toolbarTitle = expense == null ? ADD_EXPENSE : EDIT_EXPENSE;
         }
-
         getSupportFragmentManager().beginTransaction().replace(R.id.ll_expense_edit_container, ExpenseFragment.getInstance(expense, expenseCategory), Constant.FragmentTag.EXPENSE_FRAGMENT).commit();
-
+        getSupportActionBar().setTitle(toolbarTitle);
     }
 
     @Override

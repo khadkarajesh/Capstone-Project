@@ -36,6 +36,7 @@ public class DashboardActivity extends BaseActivity
 
         setSupportActionBar(toolbar);
 
+
         setNavigationDrawer();
 
         addFragment(new DashBoardFragment(), Constant.FragmentTag.DASHBOARD_FRAGMENT_TAG);

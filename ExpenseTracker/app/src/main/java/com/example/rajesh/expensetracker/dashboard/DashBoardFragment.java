@@ -15,6 +15,7 @@ import com.example.rajesh.expensetracker.account.edit.AccountEditActivity;
 import com.example.rajesh.expensetracker.base.frament.BaseFragment;
 import com.example.rajesh.expensetracker.category.ExpenseCategory;
 import com.example.rajesh.expensetracker.expense.ExpenseEditActivity;
+import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,9 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
 
     @Bind(R.id.progress_expense)
     ProgressBar progressExpense;
+
+    @Bind(R.id.fab_menu)
+    FloatingActionMenu fabMenu;
 
     DashboardPresenter dashboardPresenter;
     long mExpenses = 0;
@@ -116,6 +120,7 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
                 getActivity().startActivity(ExpenseEditActivity.getLaunchIntent(getActivity(), null, null));
                 break;
         }
+        fabMenu.close(true);
     }
 
     @Override

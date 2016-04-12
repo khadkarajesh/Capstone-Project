@@ -14,6 +14,10 @@ public class CategoryEditActivity extends BaseActivity {
 
     Toolbar toolbar;
     ExpenseCategory expenseCategory;
+    String toolbarTitle;
+
+    private static final String ADD_CATEGORY = "Add Category";
+    private static final String EDIT_CATEGORY = "Edit Category";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +37,11 @@ public class CategoryEditActivity extends BaseActivity {
 
         if (getIntent().getBundleExtra(Constant.CATEGORY_EDIT_ACTIVITY_BUNDLE) != null) {
             expenseCategory = getIntent().getBundleExtra(Constant.CATEGORY_EDIT_ACTIVITY_BUNDLE).getParcelable(Constant.CATEGORY);
+            toolbarTitle = expenseCategory == null ? ADD_CATEGORY : EDIT_CATEGORY;
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.ll_category_edit_container, AddCategoryFragment.getInstance(expenseCategory), Constant.FragmentTag.EXPENSE_FRAGMENT).commit();
-
+        getSupportActionBar().setTitle(toolbarTitle);
     }
 
     @Override
