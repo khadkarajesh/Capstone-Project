@@ -61,4 +61,27 @@ public class ExpenseModel implements ExpenseModelContract {
         }
         onExpenseResultListener.onExpenseSuccess(expenses, expenseCategories);
     }
+
+    @Override
+    public void getAccountsByMonth(OnAccountResultListener onAccountResultListener) {
+        long totalAmount = 0;
+
+        long endOfMonthTimeStamp = DateTimeUtil.getTimeStamp(DateTimeUtil.MONTH_LAST_DATE);
+        long startOfMonthTimeStamp = DateTimeUtil.getTimeStamp(DateTimeUtil.MONTH_FIRST_DATE);
+        Cursor cursor = ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().query(ExpenseTrackerContract.AccountEntry.buildAccountUriByMonth(String.valueOf(startOfMonthTimeStamp), String.valueOf(endOfMonthTimeStamp)), null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            totalAmount = cursor.getInt(0);
+        } else {
+            totalAmount = -1;
+        }
+
+        if (totalAmount > 0) {
+            onAccountResultListener.onAccountByMonthListSuccess(totalAmount);
+        } else {
+            onAccountResultListener.onAccountByMonthListFailure("There is no amount");
+        }
+    }
+
+
 }

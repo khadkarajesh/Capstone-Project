@@ -39,6 +39,20 @@ public class ExpenseTrackerContract {
             return Integer.parseInt(uri.getPathSegments().get(1));
         }
 
+        public static Uri buildAccountUriByMonth(String startDate, String endDate) {
+            return CONTENT_URI.buildUpon().appendPath(startDate).appendPath(endDate).build();
+        }
+
+        public static String getLastDateOfMonth(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
+
+        public static String getStartDateOfMonth(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+
+
     }
 
     public static class ExpenseEntry implements BaseColumns {

@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
+import com.example.rajesh.expensetracker.Constant;
+
 import timber.log.Timber;
 
 
@@ -22,6 +24,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
     private static final int SINGLE_ACCOUNT = 101;
     private static final int ACCOUNT_LIST = 102;
     private static final int ACCOUNT_BY_ID = 103;
+    private static final int ACCOUNTS_BY_MONTH = 104;
 
 
     private static final int EXPENSE = 200;
@@ -62,9 +65,11 @@ public class ExpenseTrackerProvider extends ContentProvider {
             + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE
             + " <= ?"
             + " AND "
-            +ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
+            + ExpenseTrackerContract.ExpenseEntry.TABLE_NAME
             + "."
-            +ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TYPE +" = ?";
+            + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TYPE + " = ?";
+
+    private String ACCOUNTS_BY_MONTH_SELECTION = ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_CREATED_DATE + " >= ?" + " AND " + ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_CREATED_DATE + " <= ?" + " OR " + ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_TYPE + "= ?";
 
     static {
         sqLiteQueryBuilder = new SQLiteQueryBuilder();
@@ -106,10 +111,15 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 startDate = ExpenseTrackerContract.ExpenseEntry.getStartDateOfMonth(uri);
                 endDate = ExpenseTrackerContract.ExpenseEntry.getLastDateOfMonth(uri);
                 String expenseType = ExpenseTrackerContract.ExpenseEntry.getExpenseType(uri);
-                retCursor = sqLiteQueryBuilder.query(dbHelper.getWritableDatabase(), null, CATEGORY_AND_RECURRING_EXPENSE_BY_MONTH, new String[]{startDate, endDate,expenseType}, null, null, sortOrder);
+                retCursor = sqLiteQueryBuilder.query(dbHelper.getWritableDatabase(), null, CATEGORY_AND_RECURRING_EXPENSE_BY_MONTH, new String[]{startDate, endDate, expenseType}, null, null, sortOrder);
                 break;
             case ACCOUNT:
                 retCursor = sqLiteDatabase.query(ExpenseTrackerContract.AccountEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case ACCOUNTS_BY_MONTH:
+                startDate = ExpenseTrackerContract.AccountEntry.getStartDateOfMonth(uri);
+                endDate = ExpenseTrackerContract.AccountEntry.getLastDateOfMonth(uri);
+                retCursor = sqLiteDatabase.rawQuery("SELECT SUM (" + ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_AMOUNT + ") FROM " + ExpenseTrackerContract.AccountEntry.TABLE_NAME + " WHERE " + ACCOUNTS_BY_MONTH_SELECTION, new String[]{startDate, endDate, Constant.RECURRING_TYPE});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -244,6 +254,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/*", ACCOUNT_LIST);
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/#", SINGLE_ACCOUNT);
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/*", ACCOUNT_BY_ID);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/*/*", ACCOUNTS_BY_MONTH);
 
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH, CATEGORY);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH + "/*", CATEGORY_LIST);

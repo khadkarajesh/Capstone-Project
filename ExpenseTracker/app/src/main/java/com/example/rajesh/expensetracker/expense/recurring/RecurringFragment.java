@@ -83,4 +83,9 @@ public class RecurringFragment extends BaseFragment implements ExpenseView.Displ
     public void showNoExpensesView() {
 
     }
+
+    @Override
+    public void provideTotalAmount(long totalAmount) {
+
+    }
 }

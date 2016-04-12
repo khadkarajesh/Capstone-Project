@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.rajesh.expensetracker.R;
 import com.example.rajesh.expensetracker.account.edit.AccountEditActivity;
@@ -27,7 +28,15 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
     @Bind(R.id.rv_dashboard)
     RecyclerView rvDashBoard;
 
+    @Bind(R.id.tv_total_amount)
+    TextView tvTotalAmount;
+
+    @Bind(R.id.tv_total_expense)
+    TextView tvTotalExpense;
+
     DashboardPresenter dashboardPresenter;
+    long mExpenses = 0;
+    long mTotalAmount = 0;
 
     public DashBoardFragment() {
         // Required empty public constructor
@@ -40,6 +49,8 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
 
         dashboardPresenter = new DashboardPresenter(this);
         dashboardPresenter.getData(null);
+
+        dashboardPresenter.getTotalAmount();
     }
 
     @Override
@@ -91,10 +102,24 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
     @Override
     public void showExpenses(ArrayList<Expense> expenses, ArrayList<ExpenseCategory> categories) {
         expenseAdapter.addExpenses(expenses, categories);
+        calculateTotalExpense(expenses);
+    }
+
+    private void calculateTotalExpense(ArrayList<Expense> expenses) {
+        for (Expense expense : expenses) {
+            mExpenses = mExpenses + expense.expenseAmount;
+        }
+        tvTotalExpense.setText("" + mExpenses);
     }
 
     @Override
     public void showNoExpensesView() {
 
+    }
+
+    @Override
+    public void provideTotalAmount(long totalAmount) {
+        mTotalAmount = totalAmount;
+        tvTotalAmount.setText("" + totalAmount);
     }
 }

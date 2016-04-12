@@ -5,7 +5,7 @@ import com.example.rajesh.expensetracker.category.ExpenseCategory;
 import java.util.ArrayList;
 
 
-public class DashboardPresenter implements DashboardPresenterContract, OnExpenseResultListener {
+public class DashboardPresenter implements DashboardPresenterContract, OnExpenseResultListener, OnAccountResultListener {
 
     private static final String TAG = DashboardPresenter.class.getSimpleName();
     ExpenseView.Display expenseView;
@@ -21,6 +21,11 @@ public class DashboardPresenter implements DashboardPresenterContract, OnExpense
         expenseModel.getExpense(this, expenseType);
     }
 
+    @Override
+    public void getTotalAmount() {
+        expenseModel.getAccountsByMonth(this);
+    }
+
 
     @Override
     public void onExpenseSuccess(ArrayList<Expense> expenses, ArrayList<ExpenseCategory> expenseCategories) {
@@ -29,6 +34,16 @@ public class DashboardPresenter implements DashboardPresenterContract, OnExpense
 
     @Override
     public void onExpenseFailure() {
+
+    }
+
+    @Override
+    public void onAccountByMonthListSuccess(long totalAmount) {
+        expenseView.provideTotalAmount(totalAmount);
+    }
+
+    @Override
+    public void onAccountByMonthListFailure(String message) {
 
     }
 }

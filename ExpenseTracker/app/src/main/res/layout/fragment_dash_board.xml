@@ -51,6 +51,7 @@
                         android:progress="30" />
 
                     <TextView
+                        android:id="@+id/tv_total_amount"
                         style="@style/TextAppearance.AppCompat.Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -86,6 +87,7 @@
                         android:progress="30" />
 
                     <TextView
+                        android:id="@+id/tv_total_expense"
                         style="@style/TextAppearance.AppCompat.Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -95,7 +97,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tv_total_amount"
+                    android:id="@+id/tv_remaining_amount"
                     style="@style/TextAppearance.AppCompat.Body1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
