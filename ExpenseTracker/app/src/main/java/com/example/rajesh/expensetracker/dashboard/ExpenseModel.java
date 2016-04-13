@@ -20,8 +20,8 @@ public class ExpenseModel implements ExpenseModelContract {
         ArrayList<Expense> expenses = new ArrayList<>();
         ArrayList<ExpenseCategory> expenseCategories = new ArrayList<>();
 
-        long endOfMonthTimeStamp = DateTimeUtil.getTimeStamp(DateTimeUtil.MONTH_LAST_DATE);
-        long startOfMonthTimeStamp = DateTimeUtil.getTimeStamp(DateTimeUtil.MONTH_FIRST_DATE);
+        long endOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_LAST_DAY);
+        long startOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_FIRST_DAY);
 
         Uri uri;
         Cursor cursor;
@@ -66,8 +66,8 @@ public class ExpenseModel implements ExpenseModelContract {
     public void getAccountsByMonth(OnAccountResultListener onAccountResultListener) {
         long totalAmount = 0;
 
-        long endOfMonthTimeStamp = DateTimeUtil.getTimeStamp(DateTimeUtil.MONTH_LAST_DATE);
-        long startOfMonthTimeStamp = DateTimeUtil.getTimeStamp(DateTimeUtil.MONTH_FIRST_DATE);
+        long endOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_LAST_DAY);
+        long startOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_FIRST_DAY);
         Cursor cursor = ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().query(ExpenseTrackerContract.AccountEntry.buildAccountUriByMonth(String.valueOf(startOfMonthTimeStamp), String.valueOf(endOfMonthTimeStamp)), null, null, null, null);
 
         if (cursor.moveToFirst()) {

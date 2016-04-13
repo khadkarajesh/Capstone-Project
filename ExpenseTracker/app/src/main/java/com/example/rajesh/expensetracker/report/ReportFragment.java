@@ -54,6 +54,8 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
         populateSpinner();
         setPieChart();
 
+
+
     }
 
     private void populateSpinner() {

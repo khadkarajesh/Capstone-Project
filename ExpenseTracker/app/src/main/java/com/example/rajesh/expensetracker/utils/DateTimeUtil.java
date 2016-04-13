@@ -4,34 +4,40 @@ package com.example.rajesh.expensetracker.utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import timber.log.Timber;
-
 public class DateTimeUtil {
+    public enum TimeStamp {
+        YEAR_FIRST_DAY, YEAR_LAST_DAY, MONTH_FIRST_DAY, MONTH_LAST_DAY, WEEK_FIRST_DAY, WEEK_LAST_DAY
+    }
 
-    public static final int MONTH_FIRST_DATE = 0;
-    public static final int MONTH_LAST_DATE = 1;
-
-
-    public static long getTimeStamp(int dayOfMonth) {
-        long timeStamp = 0;
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        Calendar georgianCalender = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
-
-        if (dayOfMonth == MONTH_FIRST_DATE) {
-            timeStamp = georgianCalender.getTimeInMillis();
-            Timber.d("start date timestamp %d", timeStamp);
+    public static long getTimeInMilliSeconds(TimeStamp timeStamp) {
+        Calendar calendar = Calendar.getInstance();
+        switch (timeStamp) {
+            case YEAR_FIRST_DAY:
+                calendar.set(Calendar.DAY_OF_YEAR, 1);
+                break;
+            case YEAR_LAST_DAY:
+                calendar.add(Calendar.YEAR, 1);
+                calendar.set(Calendar.DAY_OF_YEAR, 1);
+                calendar.add(Calendar.YEAR, -1);
+                break;
+            case MONTH_FIRST_DAY:
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                break;
+            case MONTH_LAST_DAY:
+                calendar.add(Calendar.MONTH, 1);
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                calendar.add(Calendar.DATE, -1);
+                break;
+            case WEEK_FIRST_DAY:
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                break;
+            case WEEK_LAST_DAY:
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+                break;
         }
-        if (dayOfMonth == MONTH_LAST_DATE) {
-            int lastDate = georgianCalender.getActualMaximum(Calendar.DAY_OF_MONTH);
-            Timber.d("last date of month %d", lastDate);
-            georgianCalender = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), lastDate);
-            timeStamp = georgianCalender.getTimeInMillis();
-            Timber.d("end date timestamp %d", timeStamp);
-        }
-        return timeStamp;
+        return calendar.getTimeInMillis();
     }
 
     public static String getTimeInFormattedString(long milliSeconds) {

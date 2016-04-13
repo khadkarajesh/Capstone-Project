@@ -27,18 +27,21 @@ public class DashboardActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, CategoryLongPressListener, ExpenseLongPressListener {
 
     Toolbar toolbar;
+    String toolbarTitle = null;
+
+    private static final String ACCOUNTS_TITLE = "Accounts";
+    private static final String CATEGORIES_TITLE = "Categories";
+    private static final String HISTORY_AND_REPORT_TITLE = "History / Report";
+    private static final String RECURRING_EXPENSE_TITLE = "Recurring Expense";
+    private static final String DASHBOARD_TITLE = "Dashboard";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         bindView();
-
         setSupportActionBar(toolbar);
-
-
         setNavigationDrawer();
-
         addFragment(new DashBoardFragment(), Constant.FragmentTag.DASHBOARD_FRAGMENT_TAG);
     }
 
@@ -105,28 +108,35 @@ public class DashboardActivity extends BaseActivity
             case R.id.nav_account:
                 fragment = new AccountFragment();
                 fragmentTag = "NewFragment";
+                toolbarTitle = ACCOUNTS_TITLE;
                 break;
             case R.id.nav_categories:
                 fragment = new CategoryFragment();
                 fragmentTag = Constant.FragmentTag.CATEGORY_FRAGMENT;
+                toolbarTitle = CATEGORIES_TITLE;
                 break;
             case R.id.nav_history_report:
                 fragment = new ReportFragment();
                 fragmentTag = Constant.FragmentTag.REPORT_FRAGMENT;
+                toolbarTitle = HISTORY_AND_REPORT_TITLE;
                 break;
             case R.id.nav_recurring_expense:
                 fragment = new RecurringFragment();
                 fragmentTag = Constant.FragmentTag.EXPENSE_FRAGMENT;
+                toolbarTitle = RECURRING_EXPENSE_TITLE;
                 break;
             case R.id.nav_settings:
-
                 break;
             case R.id.nav_dashboard:
                 fragment = new DashBoardFragment();
                 fragmentTag = Constant.FragmentTag.DASHBOARD_FRAGMENT_TAG;
+                toolbarTitle = DASHBOARD_TITLE;
+                break;
+            default:
                 break;
         }
         addFragment(fragment, fragmentTag);
+        getSupportActionBar().setTitle(toolbarTitle);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
