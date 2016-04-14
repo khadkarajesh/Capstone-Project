@@ -31,7 +31,9 @@ public class ReportModel implements ReportModelContract {
             } else {
                 totalAmount = -1;
             }
-            hashMap.put(expenseCategory, totalAmount);
+            if (totalAmount > 0) {
+                hashMap.put(expenseCategory, totalAmount);
+            }
         }
 
         if (hashMap.size() > 0) {

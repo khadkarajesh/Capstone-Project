@@ -6,14 +6,10 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.rajesh.expensetracker.R;
 import com.example.rajesh.expensetracker.base.frament.BaseFragment;
@@ -27,13 +23,11 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.Bind;
-import timber.log.Timber;
 
 
 public class ReportFragment extends BaseFragment implements OnChartValueSelectedListener, ReportView {
@@ -53,6 +47,8 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
     ReportPresenterContract presenterContract;
 
     private Typeface tf;
+    ArrayList<ExpenseCategory> mExpenseCategories = new ArrayList<>();
+    HashMap<ExpenseCategory, Integer> mExpenseWithAmountHashMap = new HashMap<>();
 
     public ReportFragment() {
         // Required empty public constructor
@@ -63,8 +59,6 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
         super.onViewCreated(view, savedInstanceState);
 
         populateSpinner();
-        setPieChart();
-
         getReport(ReportType.REPORT_BY_WEEK);
     }
 
@@ -157,18 +151,18 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
     }
 
     private ArrayList<String> getCategories() {
-        ArrayList<String> categories = new ArrayList<>();
-        categories.add("Food");
-        categories.add("Health");
-        categories.add("Fitness");
-        return categories;
+        ArrayList<String> categoryTitle = new ArrayList<>();
+        for (ExpenseCategory expenseCategory : mExpenseCategories) {
+            categoryTitle.add(expenseCategory.categoryTitle);
+        }
+        return categoryTitle;
     }
 
     private ArrayList<Entry> getExpenses() {
         ArrayList<Entry> expenses = new ArrayList<>();
-        expenses.add(new Entry(10, 0));
-        expenses.add(new Entry(40, 1));
-        expenses.add(new Entry(50, 2));
+        for (int i = 0; i < mExpenseCategories.size(); i++) {
+            expenses.add(new Entry(mExpenseWithAmountHashMap.get(mExpenseCategories.get(i)), i));
+        }
         return expenses;
     }
 
@@ -194,9 +188,9 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
 
     private ArrayList<Integer> getColors() {
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.RED);
-        colors.add(Color.BLUE);
-        colors.add(Color.GRAY);
+        for (ExpenseCategory expenseCategory : mExpenseCategories) {
+            colors.add(Color.parseColor(expenseCategory.categoryColor));
+        }
         return colors;
     }
 
@@ -211,13 +205,13 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
     }
 
     private SpannableString generateCenterSpannableText() {
-        SpannableString s = new SpannableString("MPAndroidChart\ndeveloped by Philipp Jahoda");
-        s.setSpan(new RelativeSizeSpan(1.7f), 0, 14, 0);
+        SpannableString s = new SpannableString("Total Amount "+mTotalAmount);
+       /* s.setSpan(new RelativeSizeSpan(1.7f), 0, 14, 0);
         s.setSpan(new StyleSpan(Typeface.NORMAL), 14, s.length() - 15, 0);
         s.setSpan(new ForegroundColorSpan(Color.GRAY), 14, s.length() - 15, 0);
         s.setSpan(new RelativeSizeSpan(.8f), 14, s.length() - 15, 0);
         s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 14, s.length(), 0);
-        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);*/
         return s;
     }
 
@@ -229,15 +223,18 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
 
     @Override
     public void provideExpenseByCategory(HashMap<ExpenseCategory, Integer> hashMap) {
-        Toast.makeText(getActivity(), "hash map size" + hashMap.size(), Toast.LENGTH_SHORT).show();
+        mExpenseWithAmountHashMap.clear();
+        mExpenseWithAmountHashMap.putAll(hashMap);
 
         ArrayList<ExpenseCategory> expenseCategoryList = new ArrayList<>();
         for (ExpenseCategory expenseCategory : hashMap.keySet()) {
             expenseCategoryList.add(expenseCategory);
         }
-        for (int i = 0; i < expenseCategoryList.size(); i++) {
-            Timber.d("expense category %s :: expense amount %d totalAmount %d", expenseCategoryList.get(i).categoryTitle, hashMap.get(expenseCategoryList.get(i)), mTotalAmount);
-        }
+
+        mExpenseCategories.clear();
+        mExpenseCategories.addAll(expenseCategoryList);
+
+        setPieChart();
     }
 
 }
