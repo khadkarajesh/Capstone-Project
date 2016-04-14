@@ -1,6 +1,8 @@
 package com.example.rajesh.expensetracker.utils;
 
 
+import com.example.rajesh.expensetracker.report.ReportFragment;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,5 +52,24 @@ public class DateTimeUtil {
         date.setTime(calendar.getTimeInMillis());
 
         return simpleDateFormat.format(date);
+    }
+
+    public static long[] getTimeInMilliSecondsByReportType(ReportFragment.ReportType reportType) {
+        long[] timeInMilli = new long[2];
+        switch (reportType) {
+            case REPORT_BY_WEEK:
+                timeInMilli[0] = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.WEEK_FIRST_DAY);
+                timeInMilli[1] = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.WEEK_LAST_DAY);
+                break;
+            case REPORT_BY_MONTH:
+                timeInMilli[0] = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_FIRST_DAY);
+                timeInMilli[1] = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_LAST_DAY);
+                break;
+            case REPORT_BY_YEAR:
+                timeInMilli[0] = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.YEAR_FIRST_DAY);
+                timeInMilli[1] = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.YEAR_LAST_DAY);
+                break;
+        }
+        return timeInMilli;
     }
 }

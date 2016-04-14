@@ -8,9 +8,12 @@ import com.example.rajesh.expensetracker.ExpenseTrackerApplication;
 import com.example.rajesh.expensetracker.category.ExpenseCategory;
 import com.example.rajesh.expensetracker.data.ExpenseTrackerContract;
 import com.example.rajesh.expensetracker.data.ExpenseTrackerProvider;
+import com.example.rajesh.expensetracker.report.ReportFragment;
 import com.example.rajesh.expensetracker.utils.DateTimeUtil;
 
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 
 public class ExpenseModel implements ExpenseModelContract {
@@ -20,13 +23,18 @@ public class ExpenseModel implements ExpenseModelContract {
         ArrayList<Expense> expenses = new ArrayList<>();
         ArrayList<ExpenseCategory> expenseCategories = new ArrayList<>();
 
-        long endOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_LAST_DAY);
-        long startOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_FIRST_DAY);
+        //long endOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_LAST_DAY);
+        //long startOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_FIRST_DAY);
+
+        String milliStart = String.valueOf(DateTimeUtil.getTimeInMilliSecondsByReportType(ReportFragment.ReportType.REPORT_BY_MONTH)[0]);
+        String milliEnd = String.valueOf(DateTimeUtil.getTimeInMilliSecondsByReportType(ReportFragment.ReportType.REPORT_BY_MONTH)[1]);
+
+        Timber.d(" milli start %s :: end %s ", milliStart, milliEnd);
 
         Uri uri;
         Cursor cursor;
         if (expenseType == null) {
-            uri = ExpenseTrackerContract.ExpenseEntry.buildExpenseCategoryUri(String.valueOf(startOfMonthTimeStamp), String.valueOf(endOfMonthTimeStamp));
+            uri = ExpenseTrackerContract.ExpenseEntry.buildExpenseCategoryUri(String.valueOf(DateTimeUtil.getTimeInMilliSecondsByReportType(ReportFragment.ReportType.REPORT_BY_MONTH)[0]), String.valueOf(DateTimeUtil.getTimeInMilliSecondsByReportType(ReportFragment.ReportType.REPORT_BY_MONTH)[1]));
             cursor =
                     ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().query(uri
                             , null
@@ -34,7 +42,7 @@ public class ExpenseModel implements ExpenseModelContract {
                             , null
                             , ExpenseTrackerProvider.EXPENSE_SORT_BY_DATE);
         } else {
-            uri = ExpenseTrackerContract.ExpenseEntry.buildExpenseCategoryUriExpenseType(String.valueOf(startOfMonthTimeStamp), String.valueOf(endOfMonthTimeStamp), Constant.RECURRING_TYPE);
+            uri = ExpenseTrackerContract.ExpenseEntry.buildExpenseCategoryUriExpenseType(milliStart, milliEnd, Constant.RECURRING_TYPE);
             cursor = ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().query(uri, null, null, null, ExpenseTrackerProvider.EXPENSE_SORT_BY_DATE);
         }
 
@@ -63,11 +71,11 @@ public class ExpenseModel implements ExpenseModelContract {
     }
 
     @Override
-    public void getAccountsByMonth(OnAccountResultListener onAccountResultListener) {
+    public void getAccountsByTimeStamp(OnAccountResultListener onAccountResultListener, ReportFragment.ReportType type) {
         long totalAmount = 0;
 
-        long endOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_LAST_DAY);
-        long startOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_FIRST_DAY);
+        long endOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSecondsByReportType(type)[1];
+        long startOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSecondsByReportType(type)[0];
         Cursor cursor = ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().query(ExpenseTrackerContract.AccountEntry.buildAccountUriByMonth(String.valueOf(startOfMonthTimeStamp), String.valueOf(endOfMonthTimeStamp)), null, null, null, null);
 
         if (cursor.moveToFirst()) {

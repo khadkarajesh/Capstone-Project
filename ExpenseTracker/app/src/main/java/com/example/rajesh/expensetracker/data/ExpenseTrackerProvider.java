@@ -33,6 +33,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
     private static final int EXPENSE_WITH_CATEGORY = 203;
     private static final int EXPENSE_BY_ID = 204;
     private static final int RECURRING_EXPENSE_WITH_CATEGORY = 205;
+    private static final int EXPENSE_BY_CATEGORY = 206;
 
 
     private static final int CATEGORY = 300;
@@ -70,6 +71,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
             + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TYPE + " = ?";
 
     private String ACCOUNTS_BY_MONTH_SELECTION = ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_CREATED_DATE + " >= ?" + " AND " + ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_CREATED_DATE + " <= ?" + " OR " + ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_TYPE + "= ?";
+    private String EXPENSE_BY_CATEGORY_ID = ExpenseTrackerContract.ExpenseEntry._ID + " = ?" + " AND " + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE + " >= ?" + " AND " + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE + " <= ?";
 
     static {
         sqLiteQueryBuilder = new SQLiteQueryBuilder();
@@ -121,6 +123,14 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 endDate = ExpenseTrackerContract.AccountEntry.getLastDateOfMonth(uri);
                 retCursor = sqLiteDatabase.rawQuery("SELECT SUM (" + ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_AMOUNT + ") FROM " + ExpenseTrackerContract.AccountEntry.TABLE_NAME + " WHERE " + ACCOUNTS_BY_MONTH_SELECTION, new String[]{startDate, endDate, Constant.RECURRING_TYPE});
                 break;
+            case EXPENSE_BY_CATEGORY:
+                String categoryId = ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
+                startDate = ExpenseTrackerContract.ExpenseEntry.getStartTimeStamp(uri);
+                endDate = ExpenseTrackerContract.ExpenseEntry.getEndTimeStamp(uri);
+                Timber.d("cat id %s :: startDate %s :: endDate %s",categoryId,startDate,endDate);
+                //retCursor=sqLiteDatabase.query(ExpenseTrackerContract.ExpenseEntry.TABLE_NAME,null,EXPENSE_BY_CATEGORY_ID,new String[]{categoryId,startDate,endDate},null,null,null);
+                retCursor=sqLiteDatabase.rawQuery("SELECT SUM (" + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_AMOUNT + ") FROM " + ExpenseTrackerContract.ExpenseEntry.TABLE_NAME + " WHERE " + EXPENSE_BY_CATEGORY_ID,new String[]{categoryId,startDate,endDate});
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -156,6 +166,8 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 return ExpenseTrackerContract.ExpenseCategoriesEntry.CONTENT_ITEM_TYPE;
             case EXPENSE_BY_ID:
                 return ExpenseTrackerContract.ExpenseEntry.CONTENT_ITEM_TYPE;
+            case EXPENSE_BY_CATEGORY:
+                return ExpenseTrackerContract.ExpenseEntry.CONTENT_TYPE;
         }
 
         return null;
@@ -201,7 +213,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
         int rowDeleted = 0;
         switch (uriMatcher.match(uri)) {
             case CATEGORY_BY_ID:
-                int categoryId = ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
+                String categoryId = ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
                 rowDeleted = dbHelper.getWritableDatabase().delete(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, ExpenseTrackerContract.ExpenseCategoriesEntry._ID + " = ?", new String[]{"" + categoryId});
                 break;
             case EXPENSE_BY_ID:
@@ -226,7 +238,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
         int updateId = 0;
         switch (uriMatcher.match(uri)) {
             case CATEGORY_BY_ID:
-                int categoryId = ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
+                String categoryId = ExpenseTrackerContract.ExpenseCategoriesEntry.getCategoryId(uri);
                 updateId = dbHelper.getWritableDatabase().update(ExpenseTrackerContract.ExpenseCategoriesEntry.TABLE_NAME, values, ExpenseTrackerContract.ExpenseCategoriesEntry._ID + " = ?", new String[]{"" + categoryId});
                 break;
             case EXPENSE_BY_ID:
@@ -268,6 +280,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*", EXPENSE_WITH_CATEGORY);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*", EXPENSE_BY_ID);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*/*", RECURRING_EXPENSE_WITH_CATEGORY);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*/*", EXPENSE_BY_CATEGORY);
 
         return uriMatcher;
     }

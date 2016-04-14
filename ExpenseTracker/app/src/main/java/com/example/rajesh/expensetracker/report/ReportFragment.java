@@ -13,9 +13,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.rajesh.expensetracker.R;
 import com.example.rajesh.expensetracker.base.frament.BaseFragment;
+import com.example.rajesh.expensetracker.category.ExpenseCategory;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -28,12 +30,17 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.Bind;
+import timber.log.Timber;
 
 
-public class ReportFragment extends BaseFragment implements OnChartValueSelectedListener {
+public class ReportFragment extends BaseFragment implements OnChartValueSelectedListener, ReportView {
 
+    public enum ReportType {
+        REPORT_BY_WEEK, REPORT_BY_MONTH, REPORT_BY_YEAR
+    }
 
     @Bind(R.id.chart)
     PieChart pieChart;
@@ -42,6 +49,8 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
     Spinner spinner;
 
     private Typeface tf;
+
+    ReportPresenterContract reportPresenterContract;
 
     public ReportFragment() {
         // Required empty public constructor
@@ -54,6 +63,8 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
         populateSpinner();
         setPieChart();
 
+        reportPresenterContract = new ReportPresenter(this);
+        reportPresenterContract.getExpenseByCategory(ReportType.REPORT_BY_WEEK);
 
 
     }
@@ -192,5 +203,18 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
         s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 14, s.length(), 0);
         s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);
         return s;
+    }
+
+    @Override
+    public void showReport(HashMap<ExpenseCategory, Integer> hashMap) {
+        Toast.makeText(getActivity(), "hash map size" + hashMap.size(), Toast.LENGTH_SHORT).show();
+
+        ArrayList<ExpenseCategory> expenseCategoryList = new ArrayList<>();
+        for (ExpenseCategory expenseCategory : hashMap.keySet()) {
+            expenseCategoryList.add(expenseCategory);
+        }
+        for (int i = 0; i < expenseCategoryList.size(); i++) {
+            Timber.d("expense category %s :: expense amount %d", expenseCategoryList.get(i).categoryTitle, hashMap.get(expenseCategoryList.get(i)));
+        }
     }
 }
