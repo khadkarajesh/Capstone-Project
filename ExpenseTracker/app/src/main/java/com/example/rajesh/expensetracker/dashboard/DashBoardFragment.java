@@ -61,6 +61,9 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        fabMenu.setClosedOnTouchOutside(true);
+
         setRecyclerViewAdapter();
 
         dashboardPresenter = new DashboardPresenter(this);

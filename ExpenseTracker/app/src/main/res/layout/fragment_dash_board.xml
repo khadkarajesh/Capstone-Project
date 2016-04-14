@@ -128,16 +128,20 @@
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        fab:menu_backgroundColor="#cca8a8a8"
         fab:menu_animationDelayPerItem="0"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
         fab:menu_labels_hideAnimation="@anim/jump_to_down"
         fab:menu_labels_showAnimation="@anim/jump_from_down"
         fab:menu_labels_style="@style/MenuLabelsStyle"
+        app:fab_progress_showBackground="true"
+        app:fab_progress_backgroundColor="#4D000000"
         fab:menu_shadowColor="#444">
 
         <com.github.clans.fab.FloatingActionButton
