@@ -52,7 +52,6 @@ public class ExpenseTrackerContract {
         }
 
 
-
     }
 
     public static class ExpenseEntry implements BaseColumns {
@@ -100,6 +99,22 @@ public class ExpenseTrackerContract {
 
         public static Uri buildUriWithExpenseId(int id) {
             return CONTENT_URI.buildUpon().appendPath("" + id).build();
+        }
+
+        public static Uri buildExpenseByCategoryIdUri(String categoryId, String startTimeStamp, String endTimeStamp) {
+            return CONTENT_URI.buildUpon().appendPath(categoryId).appendPath(startTimeStamp).appendPath(endTimeStamp).build();
+        }
+
+        public static String getStartTimeStamp(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
+
+        public static String getEndTimeStamp(Uri uri) {
+            return uri.getPathSegments().get(3);
+        }
+
+        public static String getCategoryId(Uri uri) {
+            return uri.getPathSegments().get(1);
         }
     }
 

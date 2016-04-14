@@ -8,9 +8,12 @@ import com.example.rajesh.expensetracker.ExpenseTrackerApplication;
 import com.example.rajesh.expensetracker.category.ExpenseCategory;
 import com.example.rajesh.expensetracker.data.ExpenseTrackerContract;
 import com.example.rajesh.expensetracker.data.ExpenseTrackerProvider;
+import com.example.rajesh.expensetracker.report.ReportFragment;
 import com.example.rajesh.expensetracker.utils.DateTimeUtil;
 
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 
 public class ExpenseModel implements ExpenseModelContract {
@@ -36,6 +39,7 @@ public class ExpenseModel implements ExpenseModelContract {
         } else {
             uri = ExpenseTrackerContract.ExpenseEntry.buildExpenseCategoryUriExpenseType(String.valueOf(startOfMonthTimeStamp), String.valueOf(endOfMonthTimeStamp), Constant.RECURRING_TYPE);
             cursor = ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().query(uri, null, null, null, ExpenseTrackerProvider.EXPENSE_SORT_BY_DATE);
+            Timber.d("uri recurring type %s",uri.toString());
         }
 
         if (cursor.getCount() > 0) {
@@ -63,11 +67,14 @@ public class ExpenseModel implements ExpenseModelContract {
     }
 
     @Override
-    public void getAccountsByMonth(OnAccountResultListener onAccountResultListener) {
+    public void getAccountsByMonth(OnAccountResultListener onAccountResultListener, ReportFragment.ReportType reportType) {
         long totalAmount = 0;
 
-        long endOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_LAST_DAY);
-        long startOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_FIRST_DAY);
+      /*  long endOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_LAST_DAY);
+        long startOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSeconds(DateTimeUtil.TimeStamp.MONTH_FIRST_DAY);*/
+
+        long endOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSecondsByReportType(reportType)[1];
+        long startOfMonthTimeStamp = DateTimeUtil.getTimeInMilliSecondsByReportType(reportType)[0];
         Cursor cursor = ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().query(ExpenseTrackerContract.AccountEntry.buildAccountUriByMonth(String.valueOf(startOfMonthTimeStamp), String.valueOf(endOfMonthTimeStamp)), null, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -77,9 +84,9 @@ public class ExpenseModel implements ExpenseModelContract {
         }
 
         if (totalAmount > 0) {
-            onAccountResultListener.onAccountByMonthListSuccess(totalAmount);
+            onAccountResultListener.onAccountByTimeStampListSuccess(totalAmount);
         } else {
-            onAccountResultListener.onAccountByMonthListFailure("There is no amount");
+            onAccountResultListener.onAccountByTimeStampListFailure("There is no amount");
         }
     }
 

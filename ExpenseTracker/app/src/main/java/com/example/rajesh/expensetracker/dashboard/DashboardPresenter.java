@@ -1,6 +1,7 @@
 package com.example.rajesh.expensetracker.dashboard;
 
 import com.example.rajesh.expensetracker.category.ExpenseCategory;
+import com.example.rajesh.expensetracker.report.ReportFragment;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ public class DashboardPresenter implements DashboardPresenterContract, OnExpense
 
     @Override
     public void getTotalAmount() {
-        expenseModel.getAccountsByMonth(this);
+        expenseModel.getAccountsByMonth(this, ReportFragment.ReportType.REPORT_BY_MONTH);
     }
 
 
@@ -38,12 +39,12 @@ public class DashboardPresenter implements DashboardPresenterContract, OnExpense
     }
 
     @Override
-    public void onAccountByMonthListSuccess(long totalAmount) {
+    public void onAccountByTimeStampListSuccess(long totalAmount) {
         expenseView.provideTotalAmount(totalAmount);
     }
 
     @Override
-    public void onAccountByMonthListFailure(String message) {
+    public void onAccountByTimeStampListFailure(String message) {
 
     }
 }
