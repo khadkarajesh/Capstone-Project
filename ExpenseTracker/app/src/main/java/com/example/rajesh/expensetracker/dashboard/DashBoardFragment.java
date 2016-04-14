@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.rajesh.expensetracker.R;
 import com.example.rajesh.expensetracker.account.edit.AccountEditActivity;
 import com.example.rajesh.expensetracker.base.frament.BaseFragment;
+import com.example.rajesh.expensetracker.category.CategoryEditActivity;
 import com.example.rajesh.expensetracker.category.ExpenseCategory;
 import com.example.rajesh.expensetracker.expense.ExpenseEditActivity;
 import com.github.clans.fab.FloatingActionMenu;
@@ -108,7 +109,7 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
         itemTouchHelper.attachToRecyclerView(rvDashBoard);
     }
 
-    @OnClick({R.id.fab_add_expense, R.id.fab_add_account})
+    @OnClick({R.id.fab_add_expense, R.id.fab_add_account, R.id.fab_add_category})
     public void onClick(View view) {
         Timber.d("clicked");
         switch (view.getId()) {
@@ -118,6 +119,9 @@ public class DashBoardFragment extends BaseFragment implements ExpenseView.Displ
                 break;
             case R.id.fab_add_expense:
                 getActivity().startActivity(ExpenseEditActivity.getLaunchIntent(getActivity(), null, null));
+                break;
+            case R.id.fab_add_category:
+                getActivity().startActivity(CategoryEditActivity.getLaunchIntent(getActivity(), null));
                 break;
         }
         fabMenu.close(true);
