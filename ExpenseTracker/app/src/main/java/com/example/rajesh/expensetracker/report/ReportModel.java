@@ -20,7 +20,6 @@ public class ReportModel implements ReportModelContract {
         int totalAmount = 0;
 
         HashMap<ExpenseCategory, Integer> hashMap = new HashMap<>();
-        reportType = ReportFragment.ReportType.REPORT_BY_WEEK;
         DateTimeUtil.getTimeInMilliSecondsByReportType(reportType);
         for (ExpenseCategory expenseCategory : arrayList) {
             Uri uri = ExpenseTrackerContract.ExpenseEntry.buildExpenseByCategoryIdUri(String.valueOf(expenseCategory.id), String.valueOf(DateTimeUtil.getTimeInMilliSecondsByReportType(reportType)[0]), String.valueOf(DateTimeUtil.getTimeInMilliSecondsByReportType(reportType)[1]));
