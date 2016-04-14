@@ -128,8 +128,8 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 Timber.d("cursor is here");
                 break;
             case RECURRING_EXPENSE_WITH_CATEGORY:
-                startDate = ExpenseTrackerContract.ExpenseEntry.getStartDateOfMonth(uri);
-                endDate = ExpenseTrackerContract.ExpenseEntry.getLastDateOfMonth(uri);
+                //startDate = ExpenseTrackerContract.ExpenseEntry.getStartDateOfMonth(uri);
+                //endDate = ExpenseTrackerContract.ExpenseEntry.getLastDateOfMonth(uri);
                 String expenseType = ExpenseTrackerContract.ExpenseEntry.getExpenseType(uri);
                 retCursor = sqLiteQueryBuilder.query(dbHelper.getWritableDatabase(), null, CATEGORY_AND_RECURRING_EXPENSE_ONLY, new String[]{expenseType}, null, null, sortOrder);
                 Timber.d("cursor size :::: %d", retCursor.getCount());
@@ -283,8 +283,8 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/#", SINGLE_EXPENSE);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*", EXPENSE_WITH_CATEGORY);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*", EXPENSE_BY_ID);
-        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*/*", RECURRING_EXPENSE_WITH_CATEGORY);
-        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*/#", EXPENSE_BY_CATEGORY);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH +"/*/*/*/*", RECURRING_EXPENSE_WITH_CATEGORY);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*/*", EXPENSE_BY_CATEGORY);
 
         return uriMatcher;
     }

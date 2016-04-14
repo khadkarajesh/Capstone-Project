@@ -60,6 +60,8 @@ public class ExpenseTrackerContract {
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + EXPENSE_PATH;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + EXPENSE_PATH;
 
+        public static final String EXPENSE_TYPE="expenseType";
+
         public static final String TABLE_NAME = "expense";
 
         public static final String COLUMNS_EXPENSE_DATE = "expense_date";
@@ -68,6 +70,7 @@ public class ExpenseTrackerContract {
         public static final String COLUMNS_EXPENSE_AMOUNT = "expense_amount";
         public static final String COLUMNS_EXPENSE_TYPE = "expense_type";
         public static final String COLUMNS_EXPENSE_CATEGORIES_ID = "expense_categories_id";
+
 
         public static Uri buildExpenseUri(long expenseId) {
             return ContentUris.withAppendedId(CONTENT_URI, expenseId);
@@ -78,7 +81,7 @@ public class ExpenseTrackerContract {
         }
 
         public static Uri buildExpenseCategoryUriExpenseType(String startDate, String endDate, String expenseType) {
-            return CONTENT_URI.buildUpon().appendPath(startDate).appendPath(endDate).appendPath(expenseType).build();
+            return CONTENT_URI.buildUpon().appendPath(EXPENSE_TYPE).appendPath(startDate).appendPath(endDate).appendPath(expenseType).build();
         }
 
         public static String getLastDateOfMonth(Uri uri) {
@@ -90,7 +93,7 @@ public class ExpenseTrackerContract {
         }
 
         public static String getExpenseType(Uri uri) {
-            return uri.getPathSegments().get(3);
+            return uri.getPathSegments().get(4);
         }
 
         public static int getExpenseId(Uri uri) {
