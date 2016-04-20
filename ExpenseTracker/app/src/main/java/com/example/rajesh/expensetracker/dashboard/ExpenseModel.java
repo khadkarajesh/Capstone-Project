@@ -39,7 +39,7 @@ public class ExpenseModel implements ExpenseModelContract {
         } else {
             uri = ExpenseTrackerContract.ExpenseEntry.buildExpenseCategoryUriExpenseType(String.valueOf(startOfMonthTimeStamp), String.valueOf(endOfMonthTimeStamp), Constant.RECURRING_TYPE);
             cursor = ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().query(uri, null, null, null, ExpenseTrackerProvider.EXPENSE_SORT_BY_DATE);
-            Timber.d("uri recurring type %s",uri.toString());
+            Timber.d("uri recurring type %s", uri.toString());
         }
 
         if (cursor.getCount() > 0) {
@@ -88,6 +88,27 @@ public class ExpenseModel implements ExpenseModelContract {
         } else {
             onAccountResultListener.onAccountByTimeStampListFailure("There is no amount");
         }
+    }
+
+    @Override
+    public void getDistinctRecurringExpense(OnExpenseResultListener onExpenseListListener) {
+        ArrayList<Expense> expenses = new ArrayList<>();
+        Uri uri = ExpenseTrackerContract.ExpenseEntry.CONTENT_URI.buildUpon().appendPath(Constant.RECURRING_TYPE).appendPath("this").appendPath("a").appendPath("v").appendPath("w").build();
+        Cursor cursor = ExpenseTrackerApplication.getExpenseTrackerApplication().getContentResolver().query(uri, null, null, null, null);
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                Expense expense = new Expense();
+                expense.expenseId = cursor.getInt(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry._ID));
+                expense.expenseTitle = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TITLE));
+                expense.expenseAmount = cursor.getInt(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_AMOUNT));
+                expense.categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_CATEGORIES_ID));
+                expense.expenseDescription = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DESCRIPTION));
+                expense.expenseType = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TYPE));
+                expense.expenseDate = cursor.getLong(cursor.getColumnIndexOrThrow(ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_DATE));
+                expenses.add(expense);
+            }
+        }
+        onExpenseListListener.onExpenseSuccess(expenses, null);
     }
 
 

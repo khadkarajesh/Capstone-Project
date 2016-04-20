@@ -15,8 +15,13 @@ public class AccountPresenter implements AccountPresenterContract, AccountListLi
     }
 
     @Override
-    public void getAccounts() {
-        accountModelContract.getAccounts(this);
+    public void getAccounts(String accountType) {
+        accountModelContract.getAccounts(this, accountType);
+    }
+
+    @Override
+    public void getDistinctRecurringAccounts(String accountType) {
+        accountModelContract.getDistinctAccounts(this, accountType);
     }
 
     @Override

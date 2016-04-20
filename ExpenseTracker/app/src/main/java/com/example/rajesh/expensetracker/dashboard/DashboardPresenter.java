@@ -27,6 +27,11 @@ public class DashboardPresenter implements DashboardPresenterContract, OnExpense
         expenseModel.getAccountsByMonth(this, ReportFragment.ReportType.REPORT_BY_MONTH);
     }
 
+    @Override
+    public void getDistinctRecurringExpense(String expenseType) {
+        expenseModel.getDistinctRecurringExpense(this);
+    }
+
 
     @Override
     public void onExpenseSuccess(ArrayList<Expense> expenses, ArrayList<ExpenseCategory> expenseCategories) {

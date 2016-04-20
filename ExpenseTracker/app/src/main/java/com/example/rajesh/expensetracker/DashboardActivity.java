@@ -1,5 +1,7 @@
 package com.example.rajesh.expensetracker;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import com.example.rajesh.expensetracker.dashboard.Expense;
 import com.example.rajesh.expensetracker.expense.ExpenseFragment;
 import com.example.rajesh.expensetracker.expense.ExpenseLongPressListener;
 import com.example.rajesh.expensetracker.expense.recurring.RecurringFragment;
+import com.example.rajesh.expensetracker.notification.PollingService;
 import com.example.rajesh.expensetracker.report.ReportFragment;
 
 public class DashboardActivity extends BaseActivity
@@ -39,10 +42,14 @@ public class DashboardActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //startActivity(new Intent(this, ConfirmationActivity.class));
+
         bindView();
         setSupportActionBar(toolbar);
         setNavigationDrawer();
         addFragment(new DashBoardFragment(), Constant.FragmentTag.DASHBOARD_FRAGMENT_TAG);
+
+        startService(new Intent(this, PollingService.class));
     }
 
     private void setNavigationDrawer() {
@@ -157,5 +164,10 @@ public class DashboardActivity extends BaseActivity
     public void onExpenseLongPress(Expense expense, ExpenseCategory expenseCategory) {
         ExpenseFragment expenseFragment = ExpenseFragment.getInstance(null, null);
         addFragment(expenseFragment, Constant.FragmentTag.EXPENSE_FRAGMENT);
+    }
+
+    public static Intent getLaunchIntent(Context context) {
+        Intent intent = new Intent(context, DashboardActivity.class);
+        return intent;
     }
 }

@@ -30,7 +30,10 @@
         <activity android:name=".HitActivity" />
         <activity android:name=".expense.ExpenseEditActivity" />
         <activity android:name=".account.edit.AccountEditActivity" />
-        <activity android:name=".category.CategoryEditActivity"></activity>
+        <activity android:name=".category.CategoryEditActivity" />
+        <activity android:name=".notification.ConfirmationActivity"></activity>
+        <receiver android:name=".notification.ExpenseTrackerBroadCastReceiver"/>
+        <service android:name=".notification.PollingService"/>
     </application>
 
 </manifest>

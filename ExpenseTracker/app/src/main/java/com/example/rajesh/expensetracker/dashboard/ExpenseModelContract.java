@@ -7,4 +7,6 @@ public interface ExpenseModelContract {
     void getExpense(OnExpenseResultListener onExpenseResultListener, String expenseType);
 
     void getAccountsByMonth(OnAccountResultListener onAccountResultListener, ReportFragment.ReportType reportType);
+
+    void getDistinctRecurringExpense(OnExpenseResultListener onExpenseListListener);
 }

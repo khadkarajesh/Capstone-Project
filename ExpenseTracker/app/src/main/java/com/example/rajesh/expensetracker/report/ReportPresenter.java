@@ -10,18 +10,20 @@ import com.example.rajesh.expensetracker.dashboard.OnAccountResultListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ReportPresenter implements ReportPresenterContract, OnAccountResultListener,OnCategoryLoadedListener,OnExpenseListListener {
+import timber.log.Timber;
+
+public class ReportPresenter implements ReportPresenterContract, OnAccountResultListener, OnCategoryLoadedListener, OnExpenseListListener {
     ReportView reportView;
     ExpenseModel expenseModel;
     CategoryModel categoryModel;
-    ReportFragment.ReportType reportType;
+    static ReportFragment.ReportType mReportType;
     ReportModelContract reportModelContract;
 
     public ReportPresenter(ReportView reportView) {
         this.reportView = reportView;
         expenseModel = new ExpenseModel();
-        categoryModel=new CategoryModel();
-        reportModelContract=new ReportModel();
+        categoryModel = new CategoryModel();
+        reportModelContract = new ReportModel();
 
     }
 
@@ -32,7 +34,7 @@ public class ReportPresenter implements ReportPresenterContract, OnAccountResult
 
     @Override
     public void getExpenseCategoryByTimeStamp(ReportFragment.ReportType reportType) {
-        this.reportType = reportType;
+        mReportType = reportType;
         categoryModel.fetchCategories(this);
     }
 
@@ -48,7 +50,9 @@ public class ReportPresenter implements ReportPresenterContract, OnAccountResult
 
     @Override
     public void onCategoryLoadedSuccess(ArrayList<ExpenseCategory> categories) {
-        reportModelContract.getExpenseByCategory(categories,reportType,this);
+        reportModelContract.getExpenseByCategory(categories, mReportType, this);
+        Timber.d("report type ------- %s", mReportType);
+
     }
 
     @Override

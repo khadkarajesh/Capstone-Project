@@ -16,6 +16,8 @@ import timber.log.Timber;
 
 public class ExpenseTrackerProvider extends ContentProvider {
 
+    //SELECT SUM (expense_amount) FROM expense WHERE _id=1 AND expense_date >=1460893092295  AND expense_date <=1461411492295
+
     ExpenseTrackerDbHelper dbHelper;
     SQLiteDatabase sqLiteDatabase;
     UriMatcher uriMatcher = buildUriMatcher();
@@ -25,6 +27,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
     private static final int ACCOUNT_LIST = 102;
     private static final int ACCOUNT_BY_ID = 103;
     private static final int ACCOUNTS_BY_MONTH = 104;
+    private static final int DISTINCT_RECURRING_ACCOUNT_TYPE = 105;
 
 
     private static final int EXPENSE = 200;
@@ -34,6 +37,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
     private static final int EXPENSE_BY_ID = 204;
     private static final int RECURRING_EXPENSE_WITH_CATEGORY = 205;
     private static final int EXPENSE_BY_CATEGORY = 206;
+    private static final int EXPENSE_BY_RECURRING_TYPE = 207;
 
 
     private static final int CATEGORY = 300;
@@ -112,8 +116,15 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 endDate = ExpenseTrackerContract.ExpenseEntry.getLastDateOfMonth(uri);
                 retCursor = sqLiteQueryBuilder.query(dbHelper.getWritableDatabase(), null, CATEGORY_AND_EXPENSE_BY_MONTH, new String[]{startDate, endDate}, null, null, sortOrder);
                 break;
+            case EXPENSE_BY_RECURRING_TYPE:
+                retCursor=sqLiteDatabase.query(true,ExpenseTrackerContract.ExpenseEntry.TABLE_NAME,null,ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TYPE +"=?",new String[]{Constant.RECURRING_TYPE},ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_TITLE,null,null,null);
+                break;
             case ACCOUNT:
                 retCursor = sqLiteDatabase.query(ExpenseTrackerContract.AccountEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case DISTINCT_RECURRING_ACCOUNT_TYPE:
+                Timber.d("distinct account type");
+                retCursor = sqLiteDatabase.query(true, ExpenseTrackerContract.AccountEntry.TABLE_NAME, null, ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_TYPE + "=?", new String[]{Constant.RECURRING_TYPE}, ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_TITLE, null, null, null);
                 break;
             case ACCOUNTS_BY_MONTH:
                 startDate = ExpenseTrackerContract.AccountEntry.getStartDateOfMonth(uri);
@@ -121,11 +132,13 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 retCursor = sqLiteDatabase.rawQuery("SELECT SUM (" + ExpenseTrackerContract.AccountEntry.COLUMNS_ACCOUNT_AMOUNT + ") FROM " + ExpenseTrackerContract.AccountEntry.TABLE_NAME + " WHERE " + ACCOUNTS_BY_MONTH_SELECTION, new String[]{startDate, endDate, Constant.RECURRING_TYPE});
                 break;
             case EXPENSE_BY_CATEGORY:
+                Timber.d("show my report");
                 String categoryId = ExpenseTrackerContract.ExpenseEntry.getCategoryId(uri);
                 startDate = ExpenseTrackerContract.ExpenseEntry.getStartTimeStamp(uri);
                 endDate = ExpenseTrackerContract.ExpenseEntry.getEndTimeStamp(uri);
+
                 retCursor = sqLiteDatabase.rawQuery("SELECT SUM (" + ExpenseTrackerContract.ExpenseEntry.COLUMNS_EXPENSE_AMOUNT + ") FROM " + ExpenseTrackerContract.ExpenseEntry.TABLE_NAME + " WHERE " + EXPENSE_BY_CATEGORY_ID, new String[]{categoryId, startDate, endDate});
-                Timber.d("cursor is here");
+                Timber.d("tick ------ cursor is here");
                 break;
             case RECURRING_EXPENSE_WITH_CATEGORY:
                 //startDate = ExpenseTrackerContract.ExpenseEntry.getStartDateOfMonth(uri);
@@ -154,11 +167,15 @@ public class ExpenseTrackerProvider extends ContentProvider {
                 return ExpenseTrackerContract.AccountEntry.CONTENT_TYPE;
             case ACCOUNT_BY_ID:
                 return ExpenseTrackerContract.AccountEntry.CONTENT_ITEM_TYPE;
+            case DISTINCT_RECURRING_ACCOUNT_TYPE:
+                return ExpenseTrackerContract.AccountEntry.CONTENT_TYPE;
             case EXPENSE:
                 return ExpenseTrackerContract.ExpenseEntry.CONTENT_ITEM_TYPE;
             case EXPENSE_LIST:
                 return ExpenseTrackerContract.ExpenseEntry.CONTENT_TYPE;
             case RECURRING_EXPENSE_WITH_CATEGORY:
+                return ExpenseTrackerContract.ExpenseEntry.CONTENT_TYPE;
+            case EXPENSE_BY_RECURRING_TYPE:
                 return ExpenseTrackerContract.ExpenseEntry.CONTENT_TYPE;
             case CATEGORY:
                 return ExpenseTrackerContract.ExpenseCategoriesEntry.CONTENT_ITEM_TYPE;
@@ -270,6 +287,7 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/*", ACCOUNT_LIST);
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/#", SINGLE_ACCOUNT);
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/*", ACCOUNT_BY_ID);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/*/*/*/*", DISTINCT_RECURRING_ACCOUNT_TYPE);
         uriMatcher.addURI(authority, ExpenseTrackerContract.ACCOUNT_PATH + "/*/*", ACCOUNTS_BY_MONTH);
 
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_CATEGORIES_PATH, CATEGORY);
@@ -283,8 +301,9 @@ public class ExpenseTrackerProvider extends ContentProvider {
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/#", SINGLE_EXPENSE);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*", EXPENSE_WITH_CATEGORY);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*", EXPENSE_BY_ID);
-        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH +"/*/*/*/*", RECURRING_EXPENSE_WITH_CATEGORY);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*/*/*", RECURRING_EXPENSE_WITH_CATEGORY);
         uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*/*", EXPENSE_BY_CATEGORY);
+        uriMatcher.addURI(authority, ExpenseTrackerContract.EXPENSE_PATH + "/*/*/*/*/*", EXPENSE_BY_RECURRING_TYPE);
 
         return uriMatcher;
     }

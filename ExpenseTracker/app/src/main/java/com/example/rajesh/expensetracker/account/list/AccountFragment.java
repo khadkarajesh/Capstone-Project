@@ -39,7 +39,7 @@ public class AccountFragment extends BaseFragment implements AccountView {
         setRecyclerView();
 
         accountPresenterContract = new AccountPresenter(this);
-        accountPresenterContract.getAccounts();
+        accountPresenterContract.getAccounts(null);
     }
 
     private void setRecyclerView() {

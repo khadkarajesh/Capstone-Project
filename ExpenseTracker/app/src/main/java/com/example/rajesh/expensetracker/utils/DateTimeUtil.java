@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class DateTimeUtil {
+    private static final long ONE_DAY_IN_MILLISECONDS = 24 * 1000 * 60 * 60;
+
     public enum TimeStamp {
         YEAR_FIRST_DAY, YEAR_LAST_DAY, MONTH_FIRST_DAY, MONTH_LAST_DAY, WEEK_FIRST_DAY, WEEK_LAST_DAY
     }
@@ -39,6 +41,9 @@ public class DateTimeUtil {
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
                 break;
         }
+        calendar.set(Calendar.HOUR, 5);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
         return calendar.getTimeInMillis();
     }
 
@@ -53,6 +58,7 @@ public class DateTimeUtil {
 
         return simpleDateFormat.format(date);
     }
+
     public static long[] getTimeInMilliSecondsByReportType(ReportFragment.ReportType reportType) {
         long[] timeInMilli = new long[2];
         switch (reportType) {
@@ -70,6 +76,15 @@ public class DateTimeUtil {
                 break;
         }
         return timeInMilli;
+    }
+
+    public static long getTimeInMilliSecondsOfNextDayEightAM() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR, 8);
+        calendar.set(Calendar.AM_PM, Calendar.AM);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTimeInMillis() + ONE_DAY_IN_MILLISECONDS;
     }
 
 

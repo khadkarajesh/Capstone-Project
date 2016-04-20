@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.Bind;
+import timber.log.Timber;
 
 
 public class ReportFragment extends BaseFragment implements OnChartValueSelectedListener, ReportView {
@@ -45,6 +46,7 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
     long mTotalAmount = 0;
 
     ReportPresenterContract presenterContract;
+    ReportType reportType = null;
 
     private Typeface tf;
     ArrayList<ExpenseCategory> mExpenseCategories = new ArrayList<>();
@@ -58,12 +60,12 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        presenterContract = new ReportPresenter(this);
         populateSpinner();
         getReport(ReportType.REPORT_BY_WEEK);
     }
 
     private void getReport(ReportType reportType) {
-        presenterContract = new ReportPresenter(this);
         presenterContract.getTotalAmountByTimeStamp(reportType);
     }
 
@@ -76,7 +78,7 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ReportType reportType = null;
+
                 switch (position) {
                     case 0:
                         reportType = ReportType.REPORT_BY_WEEK;
@@ -88,6 +90,7 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
                         reportType = ReportType.REPORT_BY_YEAR;
                         break;
                 }
+                Timber.d("report %s",reportType);
                 getReport(reportType);
             }
 
@@ -205,7 +208,7 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
     }
 
     private SpannableString generateCenterSpannableText() {
-        SpannableString s = new SpannableString("Total Amount "+mTotalAmount);
+        SpannableString s = new SpannableString("Total Amount " + mTotalAmount);
        /* s.setSpan(new RelativeSizeSpan(1.7f), 0, 14, 0);
         s.setSpan(new StyleSpan(Typeface.NORMAL), 14, s.length() - 15, 0);
         s.setSpan(new ForegroundColorSpan(Color.GRAY), 14, s.length() - 15, 0);
@@ -218,7 +221,7 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
     @Override
     public void provideTotalAccountByTimeStamp(long totalAmount) {
         mTotalAmount = totalAmount;
-        presenterContract.getExpenseCategoryByTimeStamp(ReportType.REPORT_BY_WEEK);
+        presenterContract.getExpenseCategoryByTimeStamp(reportType);
     }
 
     @Override
@@ -229,6 +232,11 @@ public class ReportFragment extends BaseFragment implements OnChartValueSelected
         ArrayList<ExpenseCategory> expenseCategoryList = new ArrayList<>();
         for (ExpenseCategory expenseCategory : hashMap.keySet()) {
             expenseCategoryList.add(expenseCategory);
+            Timber.d("expense cate %s", expenseCategory.categoryTitle);
+        }
+
+        for (ExpenseCategory expenseCategory : expenseCategoryList) {
+            Timber.d("expense category total amount %d", hashMap.get(expenseCategory));
         }
 
         mExpenseCategories.clear();
